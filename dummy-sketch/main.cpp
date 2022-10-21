@@ -11,13 +11,13 @@
  *  provided by the Arduino IDE (newer `avr-g++` version compared to the Debian Bullseye
  *  package).
  *
- *  Expected program behavior: alternate between LED_BUILTIN being OFF/ON with a 3-second
+ *  Expected program behavior: alternate between LED_BUILTIN being OFF/ON with a 100ms
  *  interval.
  */
 
 #include <Arduino.h>
 
-static constexpr unsigned long INTERVAL = 3000;
+static constexpr unsigned long INTERVAL = 100;
 static auto previous_ts = millis();
 static auto led_state = HIGH;
 
