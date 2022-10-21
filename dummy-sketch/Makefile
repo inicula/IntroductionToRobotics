@@ -32,7 +32,7 @@ MONITOR_BAUDRATE  = 9600
 ### AVR_TOOLS_DIR
 ### Path to the AVR tools directory such as avr-gcc, avr-g++, etc.
 ### or on Linux: (remove the one you don't want)
-AVR_TOOLS_DIR     = /home/ionut/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7
+AVR_TOOLS_DIR     = ~/.arduino15/packages/arduino/tools/avr-gcc/7.3.0-atmel3.6.1-arduino7
 
 ### AVRDUDE
 ### Path to avrdude directory.
