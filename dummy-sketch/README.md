@@ -9,12 +9,12 @@ The last two can be installed with `sudo apt install arduino-builder arduino-mk`
 Various commands (assuming `IntroductionToRobotics/dummy-sketch` is the current directory and the Arduino is plugged in):
 
 ```bash
-$ make # compile program
-$ make upload # upload (possibly, before compiling first)
-$ make monitor # monitor serial output
+$ make # compile
+$ make upload # upload to the board
+$ make monitor # monitor the serial output
 ```
 
-Additionally, see `main.cpp`.
+Additionally, see the comment at the top of `main.cpp`.
 
 Note:
 
