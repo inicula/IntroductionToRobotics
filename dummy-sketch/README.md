@@ -1,10 +1,18 @@
 ## Dependencies (specifically, for Debian Bullseye)
 
-* Arduino IDE (preferably the latest stable version);
+* Arduino IDE (preferably the [latest stable version](https://downloads.arduino.cc/arduino-ide/arduino-ide_2.0.0_Linux_64bit.AppImage));
 * `arduino-builder`;
 * `arduino-mk`.
 
 The last two can be installed with `sudo apt install arduino-builder arduino-mk`.
+
+Various commands (assuming `IntroductionToRobotics/dummy-sketch` is the current directory and the Arduino is plugged in):
+
+```bash
+$ make # compile program
+$ make upload # upload (possibly, before compiling first)
+$ make monitor # monitor serial output
+```
 
 Additionally, see `main.cpp`.
 
