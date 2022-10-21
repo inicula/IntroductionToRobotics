@@ -1,4 +1,6 @@
 scratch
+fqbn.txt
+paddr.txt
 
 # Prerequisites
 *.d
