@@ -5,5 +5,5 @@
 
 set -xe
 
-arduino-cli board list --format json | jq .[0].matching_boards[0].fqbn | tr -d '"' >fqbn.txt
-arduino-cli board list --format json | jq .[0].port.address | tr -d '"' >paddr.txt
+arduino-cli board list --format json | jq .[0].matching_boards[0].fqbn | tr -d '"' >/tmp/fqbn.txt
+arduino-cli board list --format json | jq .[0].port.address | tr -d '"' >/tmp/paddr.txt
