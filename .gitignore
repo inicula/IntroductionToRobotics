@@ -1,3 +1,8 @@
+dummy-sketch/.cache
+dummy-sketch/bin
+
+*/compile_commands.json
+
 scratch
 fqbn.txt
 paddr.txt
