@@ -78,7 +78,7 @@ template<typename Container, typename Callable>
 void
 for_each(Container& cont, Callable call)
 {
-        for (auto it = cont.begin(); it != cont.end(); ++it)
-                call(*it);
+        for (auto& el : cont)
+                call(el);
 }
 } /* namespace tiny */
