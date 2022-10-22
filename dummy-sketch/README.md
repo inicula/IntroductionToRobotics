@@ -14,7 +14,7 @@ $ make upload # upload to the board
 $ make monitor # monitor the serial output
 ```
 
-Additionally, see the comment at the top of `main.cpp`.
+Additionally, see the comment at the top of [`main.cpp`](main.cpp).
 
 Note:
 
