@@ -1,5 +1,8 @@
 /*
- *  Minimal implementations of some STL components
+ *  Minimal implementations of some STL components:
+ *      std::array,
+ *      std::pair,
+ *      std::for_each
  */
 
 #pragma once
