@@ -49,7 +49,7 @@ CXXFLAGS_STD      = -std=c++17
 
 ### CXXFLAGS
 ### Flags you might want to set for debugging purpose. Comment to stop.
-CXXFLAGS         += -Wall -Wextra -Wpedantic -I./../common
+CXXFLAGS         += -Wall -Wextra -Wpedantic -I./../common -flto
 
 ### MONITOR_PORT
 ### The port your board is connected to. Using an '*' tries all the ports and finds the right one.
