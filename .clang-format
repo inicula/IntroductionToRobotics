@@ -1,5 +1,6 @@
 ﻿---
 AlwaysBreakAfterDefinitionReturnType: 'true'
+AlignArrayOfStructures: 'Right'
 AlignOperands: 'true'
 AllowAllConstructorInitializersOnNextLine: 'false'
 AlwaysBreakTemplateDeclarations: 'Yes'

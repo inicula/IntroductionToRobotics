@@ -41,13 +41,11 @@ Led::update()
         analogWrite(output_pin, output_value);
 }
 
-/* clang-format off */
-static const tiny::array<Led, 3> LEDS = {{
-     {A0,  9},
-     {A1, 10},
-     {A2, 11},
-}};
-/* clang-format on */
+static const Led LEDS[3] = {
+    {A0,  9},
+    {A1, 10},
+    {A2, 11},
+};
 
 void
 setup()
