@@ -5,8 +5,6 @@
 #include <Arduino.h>
 #include "utils.h"
 
-static constexpr unsigned BAUD = 9600;
-
 struct Led {
 public:
         static constexpr tiny::pair<unsigned, unsigned> INPUT_RANGE = {0, 1023};
@@ -54,6 +52,7 @@ static const tiny::array<Led, 3> LEDS = {{
 void
 setup()
 {
+        static constexpr unsigned BAUD = 9600;
         Serial.begin(BAUD);
 }
 
