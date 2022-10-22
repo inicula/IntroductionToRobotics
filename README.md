@@ -1,5 +1,9 @@
 # IntroductionToRobotics
 
+## General notes
+
+* For homeworks from #1 onwards, the compilation/upload/monitor steps are described [here](dummy-sketch/README.md).
+
 ## Homework #0
 
 Tasks:
