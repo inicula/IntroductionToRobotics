@@ -1,3 +1,7 @@
+/*
+ *  Minimal implementations of some STL components
+ */
+
 #pragma once
 
 namespace tiny
@@ -74,4 +78,4 @@ for_each(Container& cont, Callable call)
         for (auto i1 = cont.begin(); i1 != cont.end(); ++i1)
                 call(*i1);
 }
-} // namespace tiny
+} /* namespace tiny */
