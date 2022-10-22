@@ -1,6 +1,6 @@
 ## Dependencies (specifically, for Debian Bullseye)
 
-* Arduino IDE (preferably the [latest stable version](https://downloads.arduino.cc/arduino-ide/arduino-ide_2.0.0_Linux_64bit.AppImage));
+* Arduino IDE (the [latest stable version](https://downloads.arduino.cc/arduino-ide/arduino-ide_2.0.0_Linux_64bit.AppImage));
 * `arduino-builder`;
 * `arduino-mk`.
 
