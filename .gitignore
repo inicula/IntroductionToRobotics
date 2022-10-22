@@ -1,11 +1,12 @@
-dummy-sketch/.cache
-dummy-sketch/bin
+*/.cache
+*/bin
 
 */compile_commands.json
 
 scratch
 fqbn.txt
 paddr.txt
+.cache
 
 # Prerequisites
 *.d
