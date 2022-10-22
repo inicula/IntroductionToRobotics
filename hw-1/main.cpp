@@ -12,7 +12,7 @@ public:
 
         Led(const int input_pin, const int output_pin);
 
-        void update();
+        void update() const;
 
 public:
         int input_pin;
@@ -28,7 +28,7 @@ Led::Led(const int input_pin, const int output_pin)
 }
 
 void
-Led::update()
+Led::update() const
 {
         auto input_value = analogRead(input_pin);
         auto output_value = map(input_value,
@@ -57,7 +57,8 @@ setup()
 void
 loop()
 {
-        tiny::for_each(LEDS, [](auto& led) { led.update(); });
+        for (auto& led : LEDS)
+                led.update();
 }
 
 int
