@@ -1,4 +1,9 @@
-## Homework #1
+# Homework #1
 
-### Demo
-[Google drive link](https://drive.google.com/file/d/1DKemNvDBt3oMSzYIUhAWRMcJyCQpxbtj/view?usp=sharing)
+## Task Description
+
+Control an RGB LED using three potentiometers.
+
+## [Setup picture](https://drive.google.com/file/d/1DKemNvDBt3oMSzYIUhAWRMcJyCQpxbtj/view?usp=sharing)
+
+## [Demo (video)](https://drive.google.com/file/d/1DKemNvDBt3oMSzYIUhAWRMcJyCQpxbtj/view?usp=sharing)
