@@ -6,23 +6,19 @@
 
 #pragma once
 
-namespace tiny
-{
+namespace Tiny {
 /* <utility> */
-
-template<typename T, typename U>
-struct pair {
-        T first;
-        U second;
+template <typename T, typename U>
+struct Pair {
+    T first;
+    U second;
 };
 
 /* <algorithm> */
-
-template<typename Container, typename Callable>
-void
-for_each(Container& cont, Callable call)
+template <typename Container, typename Callable>
+void forEach(Container& cont, Callable call)
 {
-        for (auto& el : cont)
-                call(el);
+    for (auto& el : cont)
+        call(el);
 }
 } /* namespace tiny */

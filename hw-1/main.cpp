@@ -2,70 +2,66 @@
  *  Main source file for homework #1
  */
 
-#include <Arduino.h>
 #include "utils.h"
+#include <Arduino.h>
 
-struct Led {
+struct LedController {
 public:
-        static constexpr tiny::pair<unsigned, unsigned> INPUT_RANGE = {0, 1023};
-        static constexpr tiny::pair<unsigned, unsigned> OUTPUT_RANGE = {0, 255};
+    static constexpr Tiny::Pair<unsigned, unsigned> INPUT_RANGE = { 0, 1023 };
+    static constexpr Tiny::Pair<unsigned, unsigned> OUTPUT_RANGE = { 0, 255 };
 
-        Led(const int input_pin, const int output_pin);
+    LedController(const int inputPin, const int outputPin);
 
-        void update() const;
+    void update() const;
 
 public:
-        int input_pin;
-        int output_pin;
+    int inputPin;
+    int outputPin;
 };
 
-Led::Led(const int input_pin, const int output_pin)
-    : input_pin(input_pin)
-    , output_pin(output_pin)
+LedController::LedController(const int inputPin, const int outputPin)
+    : inputPin(inputPin)
+    , outputPin(outputPin)
 {
-        pinMode(input_pin, INPUT);
-        pinMode(output_pin, OUTPUT);
+    pinMode(inputPin, INPUT);
+    pinMode(inputPin, OUTPUT);
 }
 
-void
-Led::update() const
+void LedController::update() const
 {
-        auto input_value = analogRead(input_pin);
-        auto output_value = map(input_value,
-                                INPUT_RANGE.first,
-                                INPUT_RANGE.second,
-                                OUTPUT_RANGE.first,
-                                OUTPUT_RANGE.second);
+    auto inputValue = analogRead(inputPin);
+    auto outputValue = map(inputValue,
+        INPUT_RANGE.first,
+        INPUT_RANGE.second,
+        OUTPUT_RANGE.first,
+        OUTPUT_RANGE.second);
 
-        Serial.println(output_value);
-        analogWrite(output_pin, output_value);
+    Serial.println(outputValue);
+    analogWrite(outputPin, outputValue);
 }
 
-static const Led LEDS[3] = {
-    {A0,  9},
-    {A1, 10},
-    {A2, 11},
+static const LedController LED_CONTROLLERS[3] = {
+    { A0, 9 },
+    { A1, 10 },
+    { A2, 11 },
 };
 
-void
-setup()
+void setup()
 {
-        static constexpr unsigned BAUD = 9600;
-        Serial.begin(BAUD);
+    static constexpr unsigned BAUD = 9600;
+    Serial.begin(BAUD);
 }
 
-void
-loop()
+void loop()
 {
-        for (auto& led : LEDS)
-                led.update();
+    for (auto& lc : LED_CONTROLLERS)
+        lc.update();
 }
 
-int
-main()
+int main()
 {
-        init();
-        setup();
-        for (;;)
-                loop();
+    init();
+    setup();
+    for (;;)
+        loop();
 }
