@@ -25,8 +25,8 @@ void LedController::initPins() const
 
 void LedController::update() const
 {
-    static constexpr Tiny::Pair<int, int> INPUT_RANGE = { 0, 1023 };
-    static constexpr Tiny::Pair<int, int> OUTPUT_RANGE = { 0, 255 };
+    static constexpr Tiny::Pair<int, int> INPUT_RANGE = { 0, 1023 }; /* Potentiometer */
+    static constexpr Tiny::Pair<int, int> OUTPUT_RANGE = { 0, 255 }; /* LED */
 
     auto inputValue = analogRead(inputPin);
     auto outputValue = map(inputValue, INPUT_RANGE.first, INPUT_RANGE.second,
