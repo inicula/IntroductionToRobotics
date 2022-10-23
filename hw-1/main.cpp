@@ -23,7 +23,7 @@ LedController::LedController(const int inputPin, const int outputPin)
     , outputPin(outputPin)
 {
     pinMode(inputPin, INPUT);
-    pinMode(inputPin, OUTPUT);
+    pinMode(outputPin, OUTPUT);
 }
 
 void LedController::update() const
