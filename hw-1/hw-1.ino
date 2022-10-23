@@ -5,9 +5,11 @@
 #include "common/utils.h"
 #include <Arduino.h>
 
+#define NUM_LEDS 3
+
 struct LedController {
 public:
-    LedController(const int inputPin, const int outputPin);
+    void initPins() const;
     void update() const;
 
 public:
@@ -15,9 +17,7 @@ public:
     int outputPin;
 };
 
-LedController::LedController(const int inputPin, const int outputPin)
-    : inputPin(inputPin)
-    , outputPin(outputPin)
+void LedController::initPins() const
 {
     pinMode(inputPin, INPUT);
     pinMode(outputPin, OUTPUT);
@@ -35,7 +35,7 @@ void LedController::update() const
     analogWrite(outputPin, outputValue);
 }
 
-static const LedController LED_CONTROLLERS[3] = {
+static constexpr LedController LED_CONTROLLERS[NUM_LEDS] = {
     { A0, 9 },
     { A1, 10 },
     { A2, 11 },
@@ -45,6 +45,9 @@ void setup()
 {
     static constexpr int BAUD = 9600;
     Serial.begin(BAUD);
+
+    for (auto& lc : LED_CONTROLLERS)
+        lc.initPins();
 }
 
 void loop()
