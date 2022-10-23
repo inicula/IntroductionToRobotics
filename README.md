@@ -3,6 +3,7 @@
 ## General notes
 
 * For homeworks from #1 onwards, the compilation/upload/monitor steps are described [here](dummy-sketch/README.md).
+* Code style guidelines: [WebKit](https://webkit.org/code-style-guidelines/) with a column limit of 95. 
 
 ## Homework #0
 
