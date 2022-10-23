@@ -1,6 +1,6 @@
 -x
 c++
--std=c++17
+-std=gnu++11
 -Wall
 -Wextra
 -Wpedantic
