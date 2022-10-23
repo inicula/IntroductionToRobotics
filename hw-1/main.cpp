@@ -11,7 +11,6 @@ public:
     static constexpr Tiny::Pair<unsigned, unsigned> OUTPUT_RANGE = { 0, 255 };
 
     LedController(const int inputPin, const int outputPin);
-
     void update() const;
 
 public:
@@ -30,11 +29,8 @@ LedController::LedController(const int inputPin, const int outputPin)
 void LedController::update() const
 {
     auto inputValue = analogRead(inputPin);
-    auto outputValue = map(inputValue,
-        INPUT_RANGE.first,
-        INPUT_RANGE.second,
-        OUTPUT_RANGE.first,
-        OUTPUT_RANGE.second);
+    auto outputValue = map(inputValue, INPUT_RANGE.first, INPUT_RANGE.second,
+        OUTPUT_RANGE.first, OUTPUT_RANGE.second);
 
     Serial.println(outputValue);
     analogWrite(outputPin, outputValue);

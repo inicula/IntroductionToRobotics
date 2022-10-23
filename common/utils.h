@@ -21,4 +21,4 @@ void forEach(Container& cont, Callable call)
     for (auto& el : cont)
         call(el);
 }
-} /* namespace tiny */
+}
