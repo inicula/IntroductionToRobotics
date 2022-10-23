@@ -2,7 +2,7 @@
 
 ## General notes
 
-* For homeworks from #1 onwards, the compilation/upload/monitor steps are described [here](dummy-sketch/README.md).
+* For homeworks from #1 onwards, the compilation/upload/monitor steps are described [here](dummy-sketch/README.md). Furthermore, the homeworks can be compiled as sketches by the Arduino IDE.
 * Code style guidelines: [WebKit](https://webkit.org/code-style-guidelines/) with a column limit of 95. 
 
 ## Homework #0
