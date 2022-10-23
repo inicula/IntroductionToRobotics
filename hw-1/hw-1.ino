@@ -1,7 +1,3 @@
-/*
- *  Main source file for homework #1
- */
-
 #include "common/utils.h"
 #include <Arduino.h>
 
@@ -13,8 +9,8 @@ public:
     void update() const;
 
 public:
-    int inputPin;
-    int outputPin;
+    int inputPin; /* Analog pin */
+    int outputPin; /* PWM pin */
 };
 
 void LedController::initPins() const
@@ -25,8 +21,8 @@ void LedController::initPins() const
 
 void LedController::update() const
 {
-    static constexpr Tiny::Pair<int, int> INPUT_RANGE = { 0, 1023 }; /* Potentiometer */
-    static constexpr Tiny::Pair<int, int> OUTPUT_RANGE = { 0, 255 }; /* LED */
+    static constexpr Tiny::Pair<int, int> INPUT_RANGE = { 0, 1023 };
+    static constexpr Tiny::Pair<int, int> OUTPUT_RANGE = { 0, 255 };
 
     auto inputValue = analogRead(inputPin);
     auto outputValue = map(inputValue, INPUT_RANGE.first, INPUT_RANGE.second,
