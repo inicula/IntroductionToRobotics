@@ -11,11 +11,11 @@ enum Led {
 };
 
 enum SemState {
-    RedLight = 0,
-    RedLightEnding,
-    YellowLight,
-    GreenLight,
-    GreenLightEnding,
+    PedRedLight = 0,
+    PedRedLightEnding,
+    CarYellowLight,
+    PedGreenLight,
+    PedGreenLightEnding,
     NumSemStates,
 };
 
@@ -34,19 +34,19 @@ static constexpr LedController LED_CONTROLLERS[NumLeds] = {
 };
 
 static constexpr unsigned DURATIONS[NumSemStates] = {
-    [SemState::RedLight] = (unsigned)-1,
-    [SemState::RedLightEnding] = 10,
-    [SemState::YellowLight] = 3,
-    [SemState::GreenLight] = 10,
-    [SemState::GreenLightEnding] = 5,
+    [SemState::PedRedLight] = (unsigned)-1,
+    [SemState::PedRedLightEnding] = 10,
+    [SemState::CarYellowLight] = 3,
+    [SemState::PedGreenLight] = 10,
+    [SemState::PedGreenLightEnding] = 5,
 };
 
 static constexpr unsigned LED_STATES[NumSemStates] = {
-    [SemState::RedLight] = 0b10001,
-    [SemState::RedLightEnding] = 0b10001,
-    [SemState::YellowLight] = 0b01001,
-    [SemState::GreenLight] = 0b00110,
-    [SemState::GreenLightEnding] = 0b00110,
+    [SemState::PedRedLight] = 0b10001,
+    [SemState::PedRedLightEnding] = 0b10001,
+    [SemState::CarYellowLight] = 0b01001,
+    [SemState::PedGreenLight] = 0b00110,
+    [SemState::PedGreenLightEnding] = 0b00110,
 };
 
 static constexpr unsigned long GREEN_LIGHT_BLINK_INTERVAL = 100;
@@ -71,7 +71,7 @@ void setup()
     Serial.begin(BAUD);
 
     /* Init semaphore state */
-    currentSemState = SemState::RedLight;
+    currentSemState = SemState::PedRedLight;
     prevTs = millis();
 
     /* Init output LED pins */
@@ -84,18 +84,18 @@ void loop()
     const int oldSemState = currentSemState;
 
     switch (currentSemState) {
-    case SemState::RedLight: /* Fallthrough */
+    case SemState::PedRedLight: /* Fallthrough */
         if (true) {
             prevTs = millis();
-            currentSemState = SemState::RedLightEnding;
+            currentSemState = SemState::PedRedLightEnding;
         }
-    case SemState::RedLightEnding: /* Fallthrough */
-    case SemState::YellowLight:
+    case SemState::PedRedLightEnding: /* Fallthrough */
+    case SemState::CarYellowLight:
         /* No further action necessary */
         break;
-    case SemState::GreenLight:
+    case SemState::PedGreenLight:
         break;
-    case SemState::GreenLightEnding:
+    case SemState::PedGreenLightEnding:
         break;
     }
 
