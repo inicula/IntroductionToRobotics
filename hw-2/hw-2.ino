@@ -1,52 +1,52 @@
 #include <Arduino.h>
 
 /* Enums */
-enum {
-    L_PED_RED = 0,
-    L_PED_GREEN,
-    L_CAR_RED,
-    L_CAR_YELLOW,
-    L_CAR_GREEN,
-    NUM_LEDS,
+enum Led {
+    PedRed = 0,
+    PedGreen,
+    CarRed,
+    CarYellow,
+    CarGreen,
+    NumLeds,
 };
 
-enum {
-    S_RED_LIGHT = 0,
-    S_RED_LIGHT_ENDING,
-    S_YELLOW_LIGHT,
-    S_GREEN_LIGHT,
-    S_GREEN_LIGHT_ENDING,
-    NUM_SEM_STATES,
+enum SemState {
+    RedLight = 0,
+    RedLightEnding,
+    YellowLight,
+    GreenLight,
+    GreenLightEnding,
+    NumSemStates,
 };
 
 /* Structs */
-struct Led {
+struct LedController {
     int outputPin;
 };
 
 /* Constants */
-static constexpr Led LEDS[NUM_LEDS] = {
-    { 2 },
-    { 3 },
-    { 4 },
-    { 5 },
-    { 6 },
+static constexpr LedController LED_CONTROLLERS[NumLeds] = {
+    [Led::PedRed] = { 2 },
+    [Led::PedGreen] = { 3 },
+    [Led::CarRed] = { 4 },
+    [Led::CarYellow] = { 5 },
+    [Led::CarGreen] = { 6 },
 };
 
-static constexpr unsigned DURATIONS[NUM_SEM_STATES] = {
-    [S_RED_LIGHT] = (unsigned)-1,
-    [S_RED_LIGHT_ENDING] = 10,
-    [S_YELLOW_LIGHT] = 3,
-    [S_GREEN_LIGHT] = 10,
-    [S_GREEN_LIGHT_ENDING] = 5,
+static constexpr unsigned DURATIONS[NumSemStates] = {
+    [SemState::RedLight] = (unsigned)-1,
+    [SemState::RedLightEnding] = 10,
+    [SemState::YellowLight] = 3,
+    [SemState::GreenLight] = 10,
+    [SemState::GreenLightEnding] = 5,
 };
 
-static constexpr unsigned LED_STATES[NUM_SEM_STATES] = {
-    [S_RED_LIGHT] = 0b10001,
-    [S_RED_LIGHT_ENDING] = 0b10001,
-    [S_YELLOW_LIGHT] = 0b01001,
-    [S_GREEN_LIGHT] = 0b00110,
-    [S_GREEN_LIGHT_ENDING] = 0b00110,
+static constexpr unsigned LED_STATES[NumSemStates] = {
+    [SemState::RedLight] = 0b10001,
+    [SemState::RedLightEnding] = 0b10001,
+    [SemState::YellowLight] = 0b01001,
+    [SemState::GreenLight] = 0b00110,
+    [SemState::GreenLightEnding] = 0b00110,
 };
 
 static constexpr unsigned long GREEN_LIGHT_BLINK_INTERVAL = 100;
@@ -59,9 +59,9 @@ static unsigned long prevTs;
 static void updateLeds(const unsigned ledStates)
 {
     static constexpr unsigned mask = 1;
-    for (unsigned i = 0; i < NUM_LEDS; ++i) {
+    for (unsigned i = 0; i < NumLeds; ++i) {
         const unsigned value = ledStates & (mask << i);
-        digitalWrite(LEDS[i].outputPin, bool(value));
+        digitalWrite(LED_CONTROLLERS[i].outputPin, bool(value));
     }
 }
 
@@ -71,11 +71,11 @@ void setup()
     Serial.begin(BAUD);
 
     /* Init semaphore state */
-    currentSemState = S_RED_LIGHT;
+    currentSemState = SemState::RedLight;
     prevTs = millis();
 
     /* Init output LED pins */
-    for (auto& led : LEDS)
+    for (auto& led : LED_CONTROLLERS)
         pinMode(led.outputPin, OUTPUT);
 }
 
@@ -84,25 +84,25 @@ void loop()
     const int oldSemState = currentSemState;
 
     switch (currentSemState) {
-    case S_RED_LIGHT: /* Fallthrough */
+    case SemState::RedLight: /* Fallthrough */
         if (true) {
             prevTs = millis();
-            currentSemState = S_RED_LIGHT_ENDING;
+            currentSemState = SemState::RedLightEnding;
         }
-    case S_RED_LIGHT_ENDING: /* Fallthrough */
-    case S_YELLOW_LIGHT:
+    case SemState::RedLightEnding: /* Fallthrough */
+    case SemState::YellowLight:
         /* No further action necessary */
         break;
-    case S_GREEN_LIGHT:
+    case SemState::GreenLight:
         break;
-    case S_GREEN_LIGHT_ENDING:
+    case SemState::GreenLightEnding:
         break;
     }
 
     const auto currentTs = millis();
     if (currentTs - prevTs > DURATIONS[currentSemState]) {
         prevTs = currentTs;
-        currentSemState = (currentSemState + 1) % NUM_SEM_STATES;
+        currentSemState = (currentSemState + 1) % NumSemStates;
     }
 
     if (currentSemState != oldSemState)
