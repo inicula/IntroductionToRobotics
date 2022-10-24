@@ -3,4 +3,3 @@ c++
 -std=gnu++11
 -Wall
 -Wextra
--Wpedantic
