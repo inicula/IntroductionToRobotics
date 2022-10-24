@@ -106,6 +106,7 @@ void loop()
 
 int main()
 {
+    init();
     setup();
     for (;;)
         loop();
