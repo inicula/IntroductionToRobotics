@@ -82,11 +82,12 @@ void setup()
 void loop()
 {
     const int oldSemState = currentSemState;
+    const auto currentTs = millis();
 
     switch (currentSemState) {
     case SemState::PedRedLight: /* Fallthrough */
         if (true) {
-            prevTs = millis();
+            prevTs = currentTs;
             currentSemState = SemState::PedRedLightEnding;
         }
     case SemState::PedRedLightEnding: /* Fallthrough */
@@ -99,7 +100,6 @@ void loop()
         break;
     }
 
-    const auto currentTs = millis();
     if (currentTs - prevTs > DURATIONS[currentSemState]) {
         prevTs = currentTs;
         currentSemState = (currentSemState + 1) % NumSemStates;
