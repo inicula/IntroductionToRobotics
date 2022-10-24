@@ -70,8 +70,13 @@ void setup()
     static constexpr unsigned BAUD = 9600;
     Serial.begin(BAUD);
 
+    /* Init semaphore state */
     currentSemState = S_RED_LIGHT;
     prevTs = millis();
+
+    /* Init output LED pins */
+    for (auto& led : LEDS)
+        pinMode(led.outputPin, OUTPUT);
 }
 
 void loop()
