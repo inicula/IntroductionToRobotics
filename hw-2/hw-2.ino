@@ -75,8 +75,8 @@ void setup()
     prevTs = millis();
 
     /* Init output LED pins */
-    for (auto& led : LED_CONTROLLERS)
-        pinMode(led.outputPin, OUTPUT);
+    for (auto& lc : LED_CONTROLLERS)
+        pinMode(lc.outputPin, OUTPUT);
 }
 
 void loop()
