@@ -42,12 +42,14 @@ static constexpr unsigned DURATIONS[NUM_SEM_STATES] = {
 };
 
 static constexpr unsigned LED_STATES[NUM_SEM_STATES] = {
-    0b10001,
-    0b10001,
-    0b01001,
-    0b00110,
-    0b00110,
+    [S_RED_LIGHT] = 0b10001,
+    [S_RED_LIGHT_ENDING] = 0b10001,
+    [S_YELLOW_LIGHT] = 0b01001,
+    [S_GREEN_LIGHT] = 0b00110,
+    [S_GREEN_LIGHT_ENDING] = 0b00110,
 };
+
+static constexpr unsigned long GREEN_LIGHT_BLINK_INTERVAL = 100;
 
 /* Semaphore state */
 static int currentSemState;
