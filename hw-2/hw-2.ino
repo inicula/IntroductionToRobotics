@@ -64,7 +64,7 @@ static uint8_t currentCrossState;
 static unsigned long prevTs;
 
 /* Macros */
-#define BUTTON_PRESSED() (digitalRead(BUTTON_PIN) == HIGH)
+#define BUTTON_PRESSED() (digitalRead(BUTTON_PIN) == LOW)
 
 /* Functions */
 static void updateLeds(const uint8_t ledStates)
@@ -87,7 +87,7 @@ void setup()
         pinMode(lc.outputPin, OUTPUT);
 
     /* Init button pin */
-    pinMode(BUTTON_PIN, INPUT);
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
 
     /* Init buzzer pin */
     pinMode(BUZZER_PIN, OUTPUT);
