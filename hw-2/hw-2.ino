@@ -74,7 +74,7 @@ static void updateLeds(const uint8_t ledStates)
 
 void setup()
 {
-    /* Init semaphore state */
+    /* Init crosswalk state */
     currentCrossState = CrossState::PedRedLight;
     prevTs = millis();
 
