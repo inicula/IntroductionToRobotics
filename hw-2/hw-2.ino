@@ -22,9 +22,11 @@ enum CrossState {
 
 /* Constants */
 static constexpr unsigned long GREEN_LIGHT_BLINK_INTERVAL = 100;
+static constexpr unsigned long GREEN_LIGHT_BEEP_INTERVAL = 500;
 static constexpr uint8_t BUTTON_PIN = 2;
 static constexpr uint8_t BUZZER_PIN = 3; /* PWM pin */
 static constexpr unsigned NOTE_FS5 = 784;
+static constexpr unsigned NOTE_FS4 = 370;
 
 static constexpr uint8_t LED_OUTPUT_PINS[NumLeds] = {
     [Led::PedRed] = 4,
@@ -36,10 +38,10 @@ static constexpr uint8_t LED_OUTPUT_PINS[NumLeds] = {
 
 static constexpr unsigned long DURATIONS[NumCrossStates] = {
     [CrossState::PedRedLight] = ULONG_MAX,
-    [CrossState::PedRedLightEnding] = 10000,
+    [CrossState::PedRedLightEnding] = 8000,
     [CrossState::CarYellowLight] = 3000,
-    [CrossState::PedGreenLight] = 10000,
-    [CrossState::PedGreenLightEnding] = 5000,
+    [CrossState::PedGreenLight] = 8000,
+    [CrossState::PedGreenLightEnding] = 4000,
 };
 
 static constexpr uint8_t LED_STATES[NumCrossStates] = {
@@ -102,9 +104,16 @@ void loop()
         currentCrossState
             = BUTTON_PRESSED() ? CrossState::PedRedLightEnding : currentCrossState;
     case CrossState::PedRedLightEnding: /* Fallthrough */
-    case CrossState::CarYellowLight: /* Fallthrough */
-    case CrossState::PedGreenLight:
+    case CrossState::CarYellowLight:
         /* No further action necessary */
+        break;
+    case CrossState::PedGreenLight:
+        odd_interval = (currentTs / GREEN_LIGHT_BEEP_INTERVAL) % 2;
+        if (odd_interval)
+            tone(BUZZER_PIN, NOTE_FS4);
+        else
+            noTone(BUZZER_PIN);
+
         break;
     case CrossState::PedGreenLightEnding: /* Fallthrough */
         odd_interval = (currentTs / GREEN_LIGHT_BLINK_INTERVAL) % 2;
@@ -130,11 +139,8 @@ void loop()
 
         switch (currentCrossState) {
         case CrossState::PedRedLight: /* Fallthrough */
-        case CrossState::PedGreenLightEnding:
+        case CrossState::PedGreenLightEnding: /* Fallthrough */
             noTone(BUZZER_PIN);
-            break;
-        case CrossState::PedGreenLight: /* Fallthrough */
-            tone(BUZZER_PIN, NOTE_FS5);
         default:
             break;
         }
