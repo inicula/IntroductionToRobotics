@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <limits.h>
 
 /* Enums */
 enum Led {
@@ -38,12 +39,12 @@ static constexpr LedController LED_CONTROLLERS[NumLeds] = {
     [Led::CarGreen] = { 8 },
 };
 
-static constexpr unsigned DURATIONS[NumCrossStates] = {
-    [CrossState::PedRedLight] = (unsigned)-1,
-    [CrossState::PedRedLightEnding] = 10,
-    [CrossState::CarYellowLight] = 3,
-    [CrossState::PedGreenLight] = 10,
-    [CrossState::PedGreenLightEnding] = 5,
+static constexpr unsigned long DURATIONS[NumCrossStates] = {
+    [CrossState::PedRedLight] = ULONG_MAX,
+    [CrossState::PedRedLightEnding] = 10000,
+    [CrossState::CarYellowLight] = 3000,
+    [CrossState::PedGreenLight] = 10000,
+    [CrossState::PedGreenLightEnding] = 5000,
 };
 
 static constexpr uint8_t LED_STATES[NumCrossStates] = {
