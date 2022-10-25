@@ -109,7 +109,7 @@ void loop()
     case CrossState::PedGreenLight:
         /* No further action necessary */
         break;
-    case CrossState::PedGreenLightEnding:
+    case CrossState::PedGreenLightEnding: /* Fallthrough */
         if ((currentTs / GREEN_LIGHT_BLINK_INTERVAL) % 2) {
             tone(BUZZER_PIN, NOTE_FS5);
             digitalWrite(LED_CONTROLLERS[Led::PedGreen].outputPin, HIGH);
@@ -117,9 +117,8 @@ void loop()
             noTone(BUZZER_PIN);
             digitalWrite(LED_CONTROLLERS[Led::PedGreen].outputPin, LOW);
         }
-        break;
     default:
-        __builtin_unreachable();
+        break;
     }
 
     if (currentTs - prevTs > DURATIONS[currentCrossState]) {
