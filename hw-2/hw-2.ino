@@ -20,23 +20,18 @@ enum CrossState {
     NumCrossStates,
 };
 
-/* Structs */
-struct LedController {
-    uint8_t outputPin;
-};
-
 /* Constants */
 static constexpr unsigned long GREEN_LIGHT_BLINK_INTERVAL = 100;
 static constexpr uint8_t BUTTON_PIN = 2;
 static constexpr uint8_t BUZZER_PIN = 3; /* PWM pin */
 static constexpr unsigned NOTE_FS5 = 784;
 
-static constexpr LedController LED_CONTROLLERS[NumLeds] = {
-    [Led::PedRed] = { 4 },
-    [Led::PedGreen] = { 5 },
-    [Led::CarRed] = { 6 },
-    [Led::CarYellow] = { 7 },
-    [Led::CarGreen] = { 8 },
+static constexpr uint8_t LED_OUTPUT_PINS[NumLeds] = {
+    [Led::PedRed] = 4,
+    [Led::PedGreen] = 5,
+    [Led::CarRed] = 6,
+    [Led::CarYellow] = 7,
+    [Led::CarGreen] = 8,
 };
 
 static constexpr unsigned long DURATIONS[NumCrossStates] = {
@@ -72,7 +67,7 @@ static void updateLeds(const uint8_t ledStates)
     static constexpr uint8_t mask = 1;
     for (uint8_t i = 0; i < NumLeds; ++i) {
         const uint8_t value = ledStates & (mask << i);
-        digitalWrite(LED_CONTROLLERS[i].outputPin, bool(value));
+        digitalWrite(LED_OUTPUT_PINS[i], bool(value));
     }
 }
 
@@ -83,8 +78,8 @@ void setup()
     prevTs = millis();
 
     /* Init output LED pins */
-    for (auto& lc : LED_CONTROLLERS)
-        pinMode(lc.outputPin, OUTPUT);
+    for (auto pin : LED_OUTPUT_PINS)
+        pinMode(pin, OUTPUT);
 
     /* Init button pin */
     pinMode(BUTTON_PIN, INPUT_PULLUP);
@@ -119,7 +114,7 @@ void loop()
         else
             noTone(BUZZER_PIN);
 
-        digitalWrite(LED_CONTROLLERS[Led::PedGreen].outputPin, odd_interval);
+        digitalWrite(LED_OUTPUT_PINS[Led::PedGreen], odd_interval);
     default:
         break;
     }
