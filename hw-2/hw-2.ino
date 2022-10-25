@@ -60,7 +60,7 @@ static uint8_t currentCrossState;
 static unsigned long prevTs;
 
 /* Macros */
-#define BUTTON_PRESSED (digitalRead(BUTTON_PIN) == HIGH)
+#define BUTTON_PRESSED() (digitalRead(BUTTON_PIN) == HIGH)
 
 /* Functions */
 static void updateLeds(const uint8_t ledStates)
@@ -97,10 +97,9 @@ void loop()
     /* Handle the current state */
     switch (currentCrossState) {
     case CrossState::PedRedLight: /* Fallthrough */
-        if (BUTTON_PRESSED) {
-            prevTs = currentTs;
-            currentCrossState = CrossState::PedRedLightEnding;
-        }
+        prevTs = currentTs;
+        currentCrossState
+            = BUTTON_PRESSED() ? CrossState::PedRedLightEnding : currentCrossState;
     case CrossState::PedRedLightEnding: /* Fallthrough */
     case CrossState::CarYellowLight: /* Fallthrough */
     case CrossState::PedGreenLight:
