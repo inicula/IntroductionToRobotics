@@ -48,6 +48,10 @@ static constexpr unsigned long DURATIONS[NumCrossStates] = {
 };
 
 static constexpr uint8_t LED_STATES[NumCrossStates] = {
+    /*
+     *  The LED values for a specific crosswalk state. The bits (from right to left) reference
+     *  the LEDs in the order that they appear in `enum Led`.
+     */
     [CrossState::PedRedLight] = 0b10001,
     [CrossState::PedRedLightEnding] = 0b10001,
     [CrossState::CarYellowLight] = 0b01001,
@@ -128,11 +132,12 @@ void loop()
         updateLeds(LED_STATES[currentCrossState]);
 
         switch (currentCrossState) {
-        case CrossState::PedGreenLight:
-            tone(BUZZER_PIN, NOTE_FS5);
-            break;
+        case CrossState::PedRedLight: /* Fallthrough */
         case CrossState::PedGreenLightEnding:
             noTone(BUZZER_PIN);
+            break;
+        case CrossState::PedGreenLight: /* Fallthrough */
+            tone(BUZZER_PIN, NOTE_FS5);
         default:
             break;
         }
