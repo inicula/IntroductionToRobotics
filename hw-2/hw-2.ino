@@ -60,10 +60,9 @@ static constexpr uint8_t LED_STATES[NumCrossStates] = {
 static uint8_t currentCrossState;
 static unsigned long prevTs;
 
-/* Macros */
-#define BUTTON_PRESSED() (digitalRead(BUTTON_PIN) == LOW)
-
 /* Functions */
+static bool buttonIsPressed() { return digitalRead(BUTTON_PIN) == LOW; }
+
 static void updateLeds(const uint8_t ledStates)
 {
     static constexpr uint8_t mask = 1;
@@ -102,7 +101,7 @@ void loop()
     case CrossState::PedRedLight: /* Fallthrough */
         prevTs = currentTs;
         currentCrossState
-            = BUTTON_PRESSED() ? CrossState::PedRedLightEnding : currentCrossState;
+            = buttonIsPressed() ? CrossState::PedRedLightEnding : currentCrossState;
     case CrossState::PedRedLightEnding: /* Fallthrough */
     case CrossState::CarYellowLight:
         /* No further action necessary */
