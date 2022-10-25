@@ -39,9 +39,6 @@ static constexpr LedController LED_CONTROLLERS[NUM_LEDS] = {
 
 void setup()
 {
-    static constexpr int BAUD = 9600;
-    Serial.begin(BAUD);
-
     for (auto& lc : LED_CONTROLLERS)
         lc.initPins();
 }
