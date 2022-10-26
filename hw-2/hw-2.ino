@@ -137,13 +137,12 @@ void loop()
 
     if (currentCrossState != oldCrossState) {
         /* Handle state transition */
-        updateLeds(LED_STATES[currentCrossState]);
-
         switch (currentCrossState) {
         case CrossState::PedRedLight: /* Fallthrough */
         case CrossState::PedGreenLightEnding: /* Fallthrough */
             noTone(BUZZER_PIN);
         default:
+            updateLeds(LED_STATES[currentCrossState]);
             break;
         }
     }
