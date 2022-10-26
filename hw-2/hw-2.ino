@@ -87,6 +87,9 @@ void setup()
 
     /* Init buzzer pin */
     pinMode(BUZZER_PIN, OUTPUT);
+
+    /* Init LED states */
+    updateLeds(LED_STATES[CrossState::PedRedLight]);
 }
 
 void loop()
