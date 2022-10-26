@@ -94,7 +94,7 @@ void setup()
 
 void loop()
 {
-    const uint8_t oldSemState = currentCrossState;
+    const uint8_t oldCrossState = currentCrossState;
     const auto currentTs = millis();
 
     bool oddInterval;
@@ -134,7 +134,7 @@ void loop()
         currentCrossState = (currentCrossState + 1) % NumCrossStates;
     }
 
-    if (currentCrossState != oldSemState) {
+    if (currentCrossState != oldCrossState) {
         /* Handle state transition */
         updateLeds(LED_STATES[currentCrossState]);
 
