@@ -1,5 +1,5 @@
 /*
- *  Simple method for playing some notes on a buzzer.
+ *  Simple method for playing note sequences on a buzzer.
  *  In this case: Little Fugue in G Minor (BWV 578).
  */
 
