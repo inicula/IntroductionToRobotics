@@ -13,47 +13,56 @@ struct Note {
 
 using Melody = const Note*;
 
-struct MelodyController {
+template <typename T> static unsigned get_total_slices(const T& notes)
+{
+    unsigned sum = 0;
+    for (const auto& note : notes)
+        sum += note.slice;
+    return sum;
+}
+
+class MelodyPlayer {
 public:
+    template <typename T>
+    constexpr MelodyPlayer(const T& notes, unsigned total_duration)
+        : mel(&notes[0])
+        , num_notes(sizeof(notes) / sizeof(notes[0]))
+        , ms_per_slice(total_duration / get_total_slices(notes))
+        , i(num_notes)
+        , past(0)
+    {
+    }
+
     void play(const uint8_t buzzer_pin)
     {
-        if (idx == N) {
-            idx = 0;
-            past = millis();
+        const auto current_ts = millis();
+
+        if (i == num_notes) {
+            i = 0;
+            past = current_ts;
         }
 
-        auto note = mel[idx].freq;
+        const auto note = mel[i].freq;
         if (note)
             tone(buzzer_pin, note);
         else
             noTone(buzzer_pin);
 
-        const auto current = millis();
-        if (current - past > mel[idx].slice * ms_per_unit) {
-            past = current;
-            ++idx;
+        if (current_ts - past > mel[i].slice * ms_per_slice) {
+            past = current_ts;
+            ++i;
         }
     }
 
-public:
+private:
     Melody mel;
-    unsigned N;
-    unsigned long ms_per_unit;
-    unsigned idx;
+    unsigned num_notes;
+    unsigned long ms_per_slice;
+    unsigned i;
     unsigned long past;
 };
 
-template <typename T> static unsigned get_total_units(const T& notes)
-{
-    unsigned sum = 0;
-    for (const auto& note : notes)
-        sum += note.slice;
-
-    return sum;
-}
-
-#define N 12
-static constexpr Note NOTES[N] = {
+static constexpr Note NOTES[] = {
     { NOTE_G5, 4 },
     { NOTE_D4, 4 },
     { NOTE_AS3, 5 },
@@ -67,7 +76,7 @@ static constexpr Note NOTES[N] = {
     { NOTE_A3, 4 },
     { NOTE_D3, 4 },
 };
-static MelodyController mc = { &NOTES[0], N, 6000 / get_total_units(NOTES), N, 0 };
+static MelodyPlayer mc(NOTES, 4000);
 
 void setup() { pinMode(3, OUTPUT); }
 
