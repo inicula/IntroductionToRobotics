@@ -94,7 +94,7 @@ void loop()
     const uint8_t oldSemState = currentCrossState;
     const auto currentTs = millis();
 
-    bool odd_interval;
+    bool oddInterval;
 
     /* Handle the current state */
     switch (currentCrossState) {
@@ -107,22 +107,21 @@ void loop()
         /* No further action necessary */
         break;
     case CrossState::PedGreenLight:
-        odd_interval = (currentTs / GREEN_LIGHT_BEEP_INTERVAL) % 2;
-        if (odd_interval)
+        oddInterval = (currentTs / GREEN_LIGHT_BEEP_INTERVAL) % 2;
+        if (oddInterval)
             tone(BUZZER_PIN, NOTE_FS4);
         else
             noTone(BUZZER_PIN);
 
         break;
     case CrossState::PedGreenLightEnding: /* Fallthrough */
-        odd_interval = (currentTs / GREEN_LIGHT_BLINK_INTERVAL) % 2;
-
-        if (odd_interval)
+        oddInterval = (currentTs / GREEN_LIGHT_BLINK_INTERVAL) % 2;
+        if (oddInterval)
             tone(BUZZER_PIN, NOTE_FS5);
         else
             noTone(BUZZER_PIN);
 
-        digitalWrite(LED_OUTPUT_PINS[Led::PedGreen], odd_interval);
+        digitalWrite(LED_OUTPUT_PINS[Led::PedGreen], oddInterval);
     default:
         break;
     }
