@@ -46,8 +46,9 @@ static constexpr unsigned long DURATIONS[NumCrossStates] = {
 
 static constexpr uint8_t LED_STATES[NumCrossStates] = {
     /*
-     *  The LED values for a specific crosswalk state. The bits (from right to left) reference
-     *  the LEDs in the order that they appear in `enum Led`.
+     *  LED values for a specific crosswalk state. The bits (from right to left) reference
+     *  the LEDs in the order that they appear in `enum Led` (i.e. the 1st bit is for the
+     *  pedestrians' red light, the 2nd is for the pedestrians' green light and so on).
      */
     [CrossState::PedRedLight] = 0b10001,
     [CrossState::PedRedLightEnding] = 0b10001,
