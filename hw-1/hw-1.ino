@@ -1,4 +1,4 @@
-#include "common/utils.h"
+#include "utils.h"
 #include <Arduino.h>
 
 #define NUM_LEDS 3
@@ -13,10 +13,7 @@ public:
     uint8_t outputPin; /* PWM pin */
 };
 
-void LedController::init() const
-{
-    pinMode(inputPin, INPUT);
-}
+void LedController::init() const { pinMode(inputPin, INPUT); }
 
 void LedController::update() const
 {
