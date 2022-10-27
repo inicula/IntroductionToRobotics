@@ -2,7 +2,7 @@
 
 ## Task Description
 
-Control an RGB LED using three potentiometers.
+Control an RGB LED by using three potentiometers as inputs.
 
 ## [Setup picture](https://drive.google.com/file/d/1ZXHtSrcSh2anGgK6SWMZPCZiGAFPKGY_/view?usp=sharing)
 
