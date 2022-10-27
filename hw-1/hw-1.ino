@@ -5,7 +5,7 @@
 
 struct LedController {
 public:
-    void initPins() const;
+    void init() const;
     void update() const;
 
 public:
@@ -13,10 +13,9 @@ public:
     uint8_t outputPin; /* PWM pin */
 };
 
-void LedController::initPins() const
+void LedController::init() const
 {
     pinMode(inputPin, INPUT);
-    pinMode(outputPin, OUTPUT);
 }
 
 void LedController::update() const
@@ -40,7 +39,7 @@ static constexpr LedController LED_CONTROLLERS[NUM_LEDS] = {
 void setup()
 {
     for (auto& lc : LED_CONTROLLERS)
-        lc.initPins();
+        lc.init();
 }
 
 void loop()
