@@ -4,7 +4,7 @@
 
 #include "common/music.h"
 
-static MelodyPlayer mc(MASS_IN_B_MINOR, 15000);
+static MelodyPlayer mc(MASS_IN_B_MINOR, 10000);
 
 void setup() { pinMode(3, OUTPUT); }
 

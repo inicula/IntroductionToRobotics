@@ -98,5 +98,5 @@ static constexpr Note MASS_IN_B_MINOR[] = {
     { NOTE_AS5, 1 },
     { NOTE_B5, 1 },
     { NOTE_AS5, 1 },
-    { 0, 5 },
+    { 0, 2 },
 };
