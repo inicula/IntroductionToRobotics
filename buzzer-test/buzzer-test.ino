@@ -1,6 +1,5 @@
 /*
  *  Simple method for playing note sequences on a buzzer.
- *  In this case: Little Fugue in G Minor (BWV 578).
  */
 
 #include "common/music.h"
