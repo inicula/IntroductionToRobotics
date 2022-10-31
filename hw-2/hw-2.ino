@@ -133,7 +133,8 @@ void loop()
 
     if (currentTs - prevTs > DURATIONS[currentCrossState]) {
         prevTs = currentTs;
-        currentCrossState = (currentCrossState + 1) % NumCrossStates;
+        currentCrossState
+            = (currentCrossState + 1) % NumCrossStates; /* Go to the next state in the cycle */
     }
 
     if (currentCrossState != oldCrossState) {
