@@ -37,6 +37,7 @@ static constexpr uint8_t LED_OUTPUT_PINS[NumLeds] = {
 };
 
 static constexpr unsigned long DURATIONS[NumCrossStates] = {
+    /* State durations in milliseconds */
     [CrossState::PedRedLight] = ULONG_MAX,
     [CrossState::PedRedLightEnding] = 8000,
     [CrossState::CarYellowLight] = 3000,
