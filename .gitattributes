@@ -3,3 +3,4 @@
 hw-*/*.h -linguist-detectable
 
 **/*.ino linguist-language=cpp
+**/*.h linguist-language=cpp
