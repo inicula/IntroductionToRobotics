@@ -2,7 +2,7 @@
 #include <limits.h>
 
 /* Enums */
-enum Segment {
+enum Segment : uint8_t {
     A = 0,
     B,
     C,
@@ -77,6 +77,8 @@ uint8_t ButtonController::getState(const unsigned long currentTs)
 }
 
 /* Constants */
+static constexpr uint8_t BUTTON_PIN = 2;
+
 static constexpr uint8_t SEGMENT_OUTPUT_PINS[NumSegments] = {
     [Segment::A] = 2,
     [Segment::B] = 3,
@@ -89,13 +91,11 @@ static constexpr uint8_t SEGMENT_OUTPUT_PINS[NumSegments] = {
 };
 
 /* Global variables */
-static ButtonController buttonController(2);
+static ButtonController buttonController(BUTTON_PIN);
 
 /* Functions */
 void setup()
 {
-    Serial.begin(9600);
-
     /* Init segment display */
     for (auto pin : SEGMENT_OUTPUT_PINS)
         pinMode(pin, OUTPUT);
@@ -106,9 +106,8 @@ void setup()
 
 void loop()
 {
-    const auto s = buttonController.getState(millis());
-    if (s != ButtonController::PressType::None)
-        Serial.println(s);
+    const auto pressType = buttonController.getState(millis());
+    const auto pressed = bool(pressType);
 }
 
 int main()
