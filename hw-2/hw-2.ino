@@ -12,12 +12,12 @@ enum Led {
 };
 
 enum CrossState {
-    PedRedLight = 0, /* Red for pedestrians. Green for cars. Ends on button press */
-    PedRedLightEnding, /* Same as above but ends after 8 seconds. */
-    CarYellowLight, /* Red for pedestrians. Yellow for cars. Ends after 3 seconds. */
-    PedGreenLight, /* Green for pedestrians. Frequent buzz. Ends after 8 seconds. */
-    PedGreenLightEnding, /* Blinking green light. Faster buzz rate. Ends after 4 seconds. */
-    NumCrossStates, /* When a state `S` ends, state `(S + 1) % NumCrossStates` begins */
+    PedRedLight = 0,     /* Red for pedestrians. Green for cars. Ends on button press      */
+    PedRedLightEnding,   /* Same as above but ends after 8 seconds.                        */
+    CarYellowLight,      /* Red for pedestrians. Yellow for cars. Ends after 3 seconds.    */
+    PedGreenLight,       /* Green for pedestrians. Frequent buzz. Ends after 8 seconds.    */
+    PedGreenLightEnding, /* Blinking green light. Faster buzz rate. Ends after 4 seconds.  */
+    NumCrossStates,      /* When a state `S` ends, state `(S + 1) % NumCrossStates` begins */
 };
 
 /* Constants */
@@ -132,9 +132,9 @@ void loop()
     }
 
     if (currentTs - prevTs > DURATIONS[currentCrossState]) {
+        /* Go to the next state in the cycle */
         prevTs = currentTs;
-        currentCrossState
-            = (currentCrossState + 1) % NumCrossStates; /* Go to the next state in the cycle */
+        currentCrossState = (currentCrossState + 1) % NumCrossStates;
     }
 
     if (currentCrossState != oldCrossState) {
