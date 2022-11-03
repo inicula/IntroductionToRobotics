@@ -1,5 +1,7 @@
 #include <Arduino.h>
+#include <limits.h>
 
+/* Enums */
 enum Segment {
     A = 0,
     B,
@@ -9,10 +11,73 @@ enum Segment {
     F,
     G,
     Dot,
-    NumLeds,
+    NumSegments,
 };
 
-static constexpr uint8_t SEGMENT_OUTPUT_PINS[NumLeds] = {
+/* Classes and member functions */
+class ButtonController {
+public:
+    enum PressType : uint8_t {
+        None = 0,
+        Short,
+        Long,
+    };
+
+    ButtonController(const uint8_t pin);
+
+    void init();
+    uint8_t getState(const unsigned long);
+
+    static constexpr unsigned long SHORT_PRESS_DUR = 100;
+    static constexpr unsigned long LONG_PRESS_DURATION = 1000;
+
+private:
+    bool update(const unsigned long);
+
+private:
+    uint8_t pin;
+    uint8_t previousValue;
+    unsigned long previousTs;
+    unsigned long pressDur;
+};
+
+ButtonController::ButtonController(const uint8_t pin)
+    : pin(pin)
+{
+}
+
+void ButtonController::init()
+{
+    pinMode(pin, INPUT_PULLUP);
+    previousValue = HIGH;
+    previousTs = millis();
+    pressDur = 0;
+}
+
+bool ButtonController::update(const unsigned long currentTs)
+{
+    const auto currentValue = digitalRead(pin);
+    if (currentValue != previousValue) {
+        previousValue = currentValue;
+        pressDur = currentTs - previousTs;
+        previousTs = currentTs;
+
+        return true;
+    }
+
+    return false;
+}
+
+uint8_t ButtonController::getState(const unsigned long currentTs)
+{
+    const bool changed = update(currentTs);
+    if (!changed | !previousValue | pressDur < SHORT_PRESS_DUR)
+        return PressType::None;
+    return PressType::Short + (pressDur > LONG_PRESS_DURATION);
+}
+
+/* Constants */
+static constexpr uint8_t SEGMENT_OUTPUT_PINS[NumSegments] = {
     [Segment::A] = 2,
     [Segment::B] = 3,
     [Segment::C] = 4,
@@ -23,14 +88,28 @@ static constexpr uint8_t SEGMENT_OUTPUT_PINS[NumLeds] = {
     [Segment::Dot] = 9,
 };
 
+/* Global variables */
+static ButtonController buttonController(2);
+
+/* Functions */
 void setup()
 {
+    Serial.begin(9600);
+
     /* Init segment display */
     for (auto pin : SEGMENT_OUTPUT_PINS)
         pinMode(pin, OUTPUT);
+
+    /* Init button controller */
+    buttonController.init();
 }
 
-void loop() { }
+void loop()
+{
+    const auto s = buttonController.getState(millis());
+    if (s != ButtonController::PressType::None)
+        Serial.println(s);
+}
 
 int main()
 {
