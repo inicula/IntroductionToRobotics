@@ -13,3 +13,5 @@ Tasks:
 * Create a github repository for the course activity/homeworks.
 
 ## [Homework #1](hw-1)
+
+## [Homework #2](hw-2)
