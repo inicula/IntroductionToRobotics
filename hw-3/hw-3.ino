@@ -52,6 +52,54 @@ private:
     unsigned long pressDur;
 };
 
+struct DisplayController {
+public:
+    enum class State {
+        Disengaged,
+        Engaged,
+    };
+
+    DisplayController();
+
+    void update(const unsigned long);
+
+    static constexpr unsigned long SELECTED_BLINK_INTERVAL = 350;
+
+public:
+    Segment currentSegment;
+    State currentState;
+};
+
+/* Compile-time constants */
+static constexpr uint8_t BUTTON_PIN = 2;
+
+static constexpr uint8_t SEGMENT_PINS[NumSegments] = {
+    [Segment::A] = 4,
+    [Segment::B] = 5,
+    [Segment::C] = 6,
+    [Segment::D] = 7,
+    [Segment::E] = 8,
+    [Segment::F] = 9,
+    [Segment::G] = 10,
+    [Segment::Dot] = 11,
+};
+
+static constexpr SegmentNeighbours SEGMENTS_NEIGHBOURS[NumSegments] = {
+    [Segment::A] = { Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::B] = { Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::C] = { Segment::G, Segment::D, Segment::E, Segment::Dot },
+    [Segment::D] = { Segment::G, Segment::D, Segment::E, Segment::C },
+    [Segment::E] = { Segment::G, Segment::D, Segment::E, Segment::C },
+    [Segment::F] = { Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::G] = { Segment::A, Segment::D, Segment::G, Segment::G },
+    [Segment::Dot] = { Segment::Dot, Segment::Dot, Segment::C, Segment::Dot },
+};
+
+/* Global variables */
+static ButtonController buttonController(BUTTON_PIN);
+static DisplayController displayController;
+
+/* Constructors and member functions */
 ButtonController::ButtonController(const uint8_t pin)
     : pin(pin)
 {
@@ -82,67 +130,26 @@ bool ButtonController::update(const unsigned long currentTs)
 uint8_t ButtonController::getState(const unsigned long currentTs)
 {
     const bool changed = update(currentTs);
-    if (!changed | !previousValue | pressDur < SHORT_PRESS_DUR)
+    if (!changed || !previousValue || pressDur < SHORT_PRESS_DUR)
         return PressType::None;
     return PressType::Short + (pressDur > LONG_PRESS_DURATION);
 }
 
-/* Compile-time constants */
-static constexpr uint8_t BUTTON_PIN = 2;
-
-static constexpr uint8_t SEGMENT_PINS[NumSegments] = {
-    [Segment::A] = 4,
-    [Segment::B] = 5,
-    [Segment::C] = 6,
-    [Segment::D] = 7,
-    [Segment::E] = 8,
-    [Segment::F] = 9,
-    [Segment::G] = 10,
-    [Segment::Dot] = 11,
-};
-
-static constexpr SegmentNeighbours SEGMENTS_NEIGHBOURS[NumSegments] = {
-    [Segment::A] = { Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::B] = { Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::C] = { Segment::G, Segment::D, Segment::E, Segment::Dot },
-    [Segment::D] = { Segment::G, Segment::D, Segment::E, Segment::C },
-    [Segment::E] = { Segment::G, Segment::D, Segment::E, Segment::C },
-    [Segment::F] = { Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::G] = { Segment::A, Segment::D, Segment::G, Segment::G },
-    [Segment::Dot] = { Segment::Dot, Segment::Dot, Segment::C, Segment::Dot },
-};
-
-static constexpr uint16_t DIGIT_SEGMENT_STATES[10] = {
-    [0] = 0b00111111,
-    [1] = 0b00000110,
-    [2] = 0b01011011,
-    [3] = 0b01001111,
-    [4] = 0b01100110,
-    [5] = 0b01101101,
-    [6] = 0b01111101,
-    [7] = 0b00000111,
-    [8] = 0b01111111,
-    [9] = 0b01101111,
-};
-
-/* Global variables */
-static ButtonController buttonController(BUTTON_PIN);
-
-/* Functions */
-void showDigit(const uint16_t segmentStates)
+DisplayController::DisplayController()
+    : currentSegment(Segment::A)
+    , currentState(State::Disengaged)
 {
-    static constexpr uint16_t MASK = 1;
-    for (uint16_t i = 0; i < NumSegments; ++i) {
-        const uint16_t value = segmentStates & (MASK << i);
-        digitalWrite(SEGMENT_PINS[i], bool(value));
-    }
 }
 
+void DisplayController::update(const unsigned long now)
+{
+    const bool oddInterval = (now / SELECTED_BLINK_INTERVAL) % 2;
+    digitalWrite(SEGMENT_PINS[currentSegment], oddInterval);
+}
+
+/* Functions */
 void setup()
 {
-    /* Init serial output */
-    Serial.begin(9600);
-
     /* Init segment display */
     for (auto pin : SEGMENT_PINS)
         pinMode(pin, OUTPUT);
@@ -153,12 +160,8 @@ void setup()
 
 void loop()
 {
-    static uint8_t digit = 0;
-
-    showDigit(DIGIT_SEGMENT_STATES[digit]);
-    delay(500);
-    ++digit;
-    digit %= 10;
+    const auto now = millis();
+    displayController.update(now);
 }
 
 int main()
