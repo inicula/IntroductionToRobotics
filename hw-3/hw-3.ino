@@ -1,5 +1,10 @@
+#include "utils.h"
 #include <Arduino.h>
 #include <limits.h>
+
+/* Macros */
+
+#define UNREACHABLE() (__builtin_unreachable())
 
 /* Enums */
 enum Segment : uint8_t {
@@ -15,7 +20,8 @@ enum Segment : uint8_t {
 };
 
 enum JoystickDirection : uint8_t {
-    Up = 0,
+    None = 0,
+    Up,
     Down,
     Left,
     Right,
@@ -23,10 +29,10 @@ enum JoystickDirection : uint8_t {
 };
 
 /* Using declarations */
-using SegmentNeighbours = uint8_t[JoystickDirection::NumDirections];
+using SegmentNeighbours = Segment[JoystickDirection::NumDirections];
 
 /* Classes and member functions */
-class ButtonController {
+class JoystickController {
 public:
     enum PressType : uint8_t {
         None = 0,
@@ -34,40 +40,57 @@ public:
         Long,
     };
 
-    ButtonController(const uint8_t pin);
+    enum DirectionState : uint8_t {
+        Ok = 0,
+        NeedsReset,
+    };
+
+    JoystickController(uint8_t, uint8_t, uint8_t);
 
     void init();
-    uint8_t getState(const unsigned long);
+    uint8_t getButtonValue(unsigned long);
+    uint8_t getDirectionValue();
 
+    /* Button thresholds */
     static constexpr unsigned long SHORT_PRESS_DUR = 100;
     static constexpr unsigned long LONG_PRESS_DURATION = 2000;
 
 private:
-    bool update(const unsigned long);
+    bool updateButton(unsigned long);
 
 private:
-    uint8_t pin;
-    uint8_t previousValue;
-    unsigned long previousTs;
-    unsigned long pressDur;
+    struct {
+        uint8_t pin;
+        uint8_t previousValue;
+        unsigned long previousTs;
+        unsigned long pressDur;
+    } button;
+    struct {
+        uint8_t pin;
+    } xAxis, yAxis;
+    uint8_t directionState;
 };
 
-struct DisplayController {
+class DisplayController {
 public:
     enum class State {
         Disengaged,
         Engaged,
     };
 
-    DisplayController();
+    DisplayController() = default;
 
-    void update(const unsigned long);
+    void update(unsigned long, JoystickController&);
 
     static constexpr unsigned long SELECTED_BLINK_INTERVAL = 350;
 
-public:
+private:
+    static void drawSegments(uint16_t);
+
+private:
     Segment currentSegment;
     State currentState;
+    uint16_t segmentStates;
 };
 
 /* Compile-time constants */
@@ -85,37 +108,39 @@ static constexpr uint8_t SEGMENT_PINS[NumSegments] = {
 };
 
 static constexpr SegmentNeighbours SEGMENTS_NEIGHBOURS[NumSegments] = {
-    [Segment::A] = { Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::B] = { Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::C] = { Segment::G, Segment::D, Segment::E, Segment::Dot },
-    [Segment::D] = { Segment::G, Segment::D, Segment::E, Segment::C },
-    [Segment::E] = { Segment::G, Segment::D, Segment::E, Segment::C },
-    [Segment::F] = { Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::G] = { Segment::A, Segment::D, Segment::G, Segment::G },
-    [Segment::Dot] = { Segment::Dot, Segment::Dot, Segment::C, Segment::Dot },
+    [Segment::A] = { Segment::A, Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::B] = { Segment::B, Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::C] = { Segment::C, Segment::G, Segment::D, Segment::E, Segment::Dot },
+    [Segment::D] = { Segment::D, Segment::G, Segment::D, Segment::E, Segment::C },
+    [Segment::E] = { Segment::E, Segment::G, Segment::D, Segment::E, Segment::C },
+    [Segment::F] = { Segment::F, Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::G] = { Segment::G, Segment::A, Segment::D, Segment::G, Segment::G },
+    [Segment::Dot] = { Segment::Dot, Segment::Dot, Segment::Dot, Segment::C, Segment::Dot },
 };
 
 /* Constructors and member functions */
-ButtonController::ButtonController(const uint8_t pin)
-    : pin(pin)
+JoystickController::JoystickController(
+    const uint8_t buttonPin, const uint8_t xPin, const uint8_t yPin)
 {
+    button.pin = buttonPin;
+    xAxis.pin = xPin;
+    yAxis.pin = yPin;
 }
 
-void ButtonController::init()
+void JoystickController::init()
 {
-    pinMode(pin, INPUT_PULLUP);
-    previousValue = HIGH;
-    previousTs = millis();
-    pressDur = 0;
+    pinMode(button.pin, INPUT_PULLUP);
+    button.previousValue = HIGH;
+    button.previousTs = millis();
 }
 
-bool ButtonController::update(const unsigned long currentTs)
+bool JoystickController::updateButton(const unsigned long currentTs)
 {
-    const auto currentValue = digitalRead(pin);
-    if (currentValue != previousValue) {
-        previousValue = currentValue;
-        pressDur = currentTs - previousTs;
-        previousTs = currentTs;
+    const auto currentValue = digitalRead(button.pin);
+    if (currentValue != button.previousValue) {
+        button.previousValue = currentValue;
+        button.pressDur = currentTs - button.previousTs;
+        button.previousTs = currentTs;
 
         return true;
     }
@@ -123,28 +148,94 @@ bool ButtonController::update(const unsigned long currentTs)
     return false;
 }
 
-uint8_t ButtonController::getState(const unsigned long currentTs)
+uint8_t JoystickController::getButtonValue(const unsigned long currentTs)
 {
-    const bool changed = update(currentTs);
-    if (!changed || !previousValue || pressDur < SHORT_PRESS_DUR)
+    const bool changed = updateButton(currentTs);
+    if (!changed || !button.previousValue || button.pressDur < SHORT_PRESS_DUR)
         return PressType::None;
-    return PressType::Short + (pressDur > LONG_PRESS_DURATION);
+    return PressType::Short + (button.pressDur > LONG_PRESS_DURATION);
 }
 
-DisplayController::DisplayController()
-    : currentSegment(Segment::A)
-    , currentState(State::Disengaged)
+uint8_t JoystickController::getDirectionValue()
 {
+    /* Axis thresholds */
+    static constexpr Tiny::Pair<unsigned, unsigned> INPUT_RANGE = { 0, 1023 };
+    static constexpr unsigned INPUT_MIDDLE = INPUT_RANGE.second / 2;
+    static constexpr unsigned AXIS_MIN_THRESHOLD = INPUT_MIDDLE - INPUT_MIDDLE / 2;
+    static constexpr unsigned AXIS_MAX_THRESHOLD = INPUT_MIDDLE + INPUT_MIDDLE / 2;
+    static constexpr unsigned RESET_THRESHOLD = 30;
+    static constexpr Tiny::Pair<unsigned, unsigned> RESET_RANGE
+        = { INPUT_MIDDLE - RESET_THRESHOLD, INPUT_MIDDLE + RESET_THRESHOLD };
+
+    const unsigned xVal = analogRead(xAxis.pin);
+    const unsigned yVal = analogRead(yAxis.pin);
+    switch (directionState) {
+    case Ok: {
+        const uint8_t xDir = xVal < AXIS_MIN_THRESHOLD
+            ? JoystickDirection::Left
+            : (xVal > AXIS_MAX_THRESHOLD ? JoystickDirection::Right : JoystickDirection::None);
+
+        const uint8_t yDir = yVal < AXIS_MIN_THRESHOLD
+            ? JoystickDirection::Down
+            : (yVal > AXIS_MAX_THRESHOLD ? JoystickDirection::Up : JoystickDirection::None);
+
+        if (xDir || yDir)
+            directionState = DirectionState::NeedsReset;
+
+        if (xDir && yDir) {
+            const unsigned xRemaining
+                = min(xVal - INPUT_RANGE.first, INPUT_RANGE.second - xVal);
+            const unsigned yRemaining
+                = min(yVal - INPUT_RANGE.first, INPUT_RANGE.second - yVal);
+
+            return xRemaining <= yRemaining ? xDir : yDir;
+        }
+
+        return xDir + yDir;
+    }
+    case NeedsReset:
+        directionState = !(
+            xVal == Tiny::clamp(xVal, RESET_RANGE) && yVal == Tiny::clamp(yVal, RESET_RANGE));
+        return JoystickDirection::None;
+    default:
+        UNREACHABLE();
+    }
 }
 
-void DisplayController::update(const unsigned long now)
+void DisplayController::update(const unsigned long now, JoystickController& joystickController)
 {
-    const bool oddInterval = (now / SELECTED_BLINK_INTERVAL) % 2;
-    digitalWrite(SEGMENT_PINS[currentSegment], oddInterval);
+    switch (currentState) {
+    case State::Disengaged: {
+        /* Handle directional input */
+        currentSegment
+            = SEGMENTS_NEIGHBOURS[currentSegment][joystickController.getDirectionValue()];
+
+        /* Set the selected segment on the appropriate blink phase */
+        const uint16_t oddInterval = (now / SELECTED_BLINK_INTERVAL) % 2;
+        const uint16_t mask = 1 << currentSegment;
+        const uint16_t intervalSegmentStates
+            = (segmentStates & ~mask) | (oddInterval << currentSegment);
+
+        /* Draw the resulting segment states */
+        drawSegments(intervalSegmentStates);
+    }
+    case State::Engaged:
+    default:
+        break;
+    }
+}
+
+void DisplayController::drawSegments(const uint16_t segmentStates)
+{
+    static constexpr uint16_t MASK = 1;
+    for (uint16_t i = 0; i < NumSegments; ++i) {
+        const uint16_t value = segmentStates & (MASK << i);
+        digitalWrite(SEGMENT_PINS[i], bool(value));
+    }
 }
 
 /* Global variables */
-static ButtonController buttonController(BUTTON_PIN);
+static JoystickController joystickController(BUTTON_PIN, A1, A0);
 static DisplayController displayController;
 
 /* Functions */
@@ -155,13 +246,13 @@ void setup()
         pinMode(pin, OUTPUT);
 
     /* Init button controller */
-    buttonController.init();
+    joystickController.init();
 }
 
 void loop()
 {
     const auto now = millis();
-    displayController.update(now);
+    displayController.update(now, joystickController);
 }
 
 int main()
