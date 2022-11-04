@@ -20,7 +20,7 @@ enum CrossState {
     NumCrossStates,      /* When a state `S` ends, state `(S + 1) % NumCrossStates` begins. */
 };
 
-/* Constants */
+/* Compile-time constants */
 static constexpr unsigned long GREEN_LIGHT_BLINK_INTERVAL = 100;
 static constexpr unsigned long GREEN_LIGHT_BEEP_INTERVAL = 500;
 static constexpr uint8_t BUTTON_PIN = 2;
