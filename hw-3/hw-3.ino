@@ -187,10 +187,9 @@ uint8_t JoystickController::getDirectionValue()
             directionState = DirectionState::NeedsReset;
 
         if (xDir && yDir) {
-            const unsigned xRemaining
-                = min(xVal - INPUT_RANGE.first, INPUT_RANGE.second - xVal);
-            const unsigned yRemaining
-                = min(yVal - INPUT_RANGE.first, INPUT_RANGE.second - yVal);
+            /* Both values are past the threshold, so choose the one closer to the limits */
+            const auto xRemaining = min(xVal - INPUT_RANGE.first, INPUT_RANGE.second - xVal);
+            const auto yRemaining = min(yVal - INPUT_RANGE.first, INPUT_RANGE.second - yVal);
 
             return xRemaining <= yRemaining ? xDir : yDir;
         }
