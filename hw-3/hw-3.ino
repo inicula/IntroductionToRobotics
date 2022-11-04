@@ -226,12 +226,11 @@ void DisplayController::update(const unsigned long now, JoystickController& joys
             currentSegment = Segment::Dot;
         }
 
-        /* Set the current segment on the appropriate blink phase */
+        /* Find the current segment's appropriate blink phase */
         const bool oddInterval = (now / SELECTED_BLINK_INTERVAL) % 2;
         const Bitfield intervalSegmentStates
             = (segmentStates & ~segmentMask) | (oddInterval << currentSegment);
 
-        /* Draw the resulting segment states */
         drawSegments(intervalSegmentStates);
         break;
     }
