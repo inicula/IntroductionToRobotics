@@ -173,6 +173,7 @@ uint8_t JoystickController::getDirectionValue()
 
     const unsigned xVal = analogRead(xAxis.pin);
     const unsigned yVal = analogRead(yAxis.pin);
+
     switch (directionState) {
     case Ok: {
         const uint8_t xDir = xVal < AXIS_MIN_THRESHOLD
