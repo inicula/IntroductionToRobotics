@@ -95,10 +95,6 @@ static constexpr SegmentNeighbours SEGMENTS_NEIGHBOURS[NumSegments] = {
     [Segment::Dot] = { Segment::Dot, Segment::Dot, Segment::C, Segment::Dot },
 };
 
-/* Global variables */
-static ButtonController buttonController(BUTTON_PIN);
-static DisplayController displayController;
-
 /* Constructors and member functions */
 ButtonController::ButtonController(const uint8_t pin)
     : pin(pin)
@@ -146,6 +142,10 @@ void DisplayController::update(const unsigned long now)
     const bool oddInterval = (now / SELECTED_BLINK_INTERVAL) % 2;
     digitalWrite(SEGMENT_PINS[currentSegment], oddInterval);
 }
+
+/* Global variables */
+static ButtonController buttonController(BUTTON_PIN);
+static DisplayController displayController;
 
 /* Functions */
 void setup()
