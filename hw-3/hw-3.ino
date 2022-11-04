@@ -228,6 +228,8 @@ void DisplayController::update(const unsigned long now, JoystickController& joys
 
         /* Find the current segment's appropriate blink phase */
         const bool oddInterval = (now / SELECTED_BLINK_INTERVAL) % 2;
+
+        /* Odd interval -> treat segment as ON. Even interval -> treat segment as OFF */
         const Bitfield intervalSegmentStates
             = (segmentStates & ~segmentMask) | (oddInterval << currentSegment);
 
