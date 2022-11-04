@@ -17,6 +17,7 @@ enum Segment : uint8_t {
     Dot,
     NumSegments,
 };
+
 enum JoystickDirection : uint8_t {
     None = 0,
     Up,
@@ -38,6 +39,7 @@ public:
         Short,
         Long,
     };
+
     enum DirectionState : uint8_t {
         Ok = 0,
         NeedsReset,
@@ -68,7 +70,7 @@ private:
 class DisplayController {
 public:
     enum class State {
-        Disengaged,
+        Disengaged = 0,
         Engaged,
     };
 
