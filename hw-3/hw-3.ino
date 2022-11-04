@@ -49,10 +49,6 @@ public:
     uint8_t getButtonValue(unsigned long);
     uint8_t getDirectionValue();
 
-    /* Button thresholds */
-    static constexpr unsigned long SHORT_PRESS_DUR = 100;
-    static constexpr unsigned long LONG_PRESS_DURATION = 2000;
-
 private:
     bool updateButton(unsigned long);
 
@@ -149,6 +145,10 @@ bool JoystickController::updateButton(const unsigned long currentTs)
 
 uint8_t JoystickController::getButtonValue(const unsigned long currentTs)
 {
+    /* Button thresholds */
+    static constexpr unsigned long SHORT_PRESS_DUR = 100;
+    static constexpr unsigned long LONG_PRESS_DURATION = 2000;
+
     const bool changed = updateButton(currentTs);
     if (!changed || !button.previousValue || button.pressDur < SHORT_PRESS_DUR)
         return PressType::None;
