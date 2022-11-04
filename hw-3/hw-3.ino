@@ -2,9 +2,6 @@
 #include <Arduino.h>
 #include <limits.h>
 
-/* Macros */
-#define UNREACHABLE __builtin_unreachable()
-
 /* Enums */
 enum Segment : uint8_t {
     A = 0,
@@ -40,7 +37,7 @@ public:
         Long,
     };
 
-    enum DirectionState : uint8_t {
+    enum class DirectionState : uint8_t {
         Ok = 0,
         NeedsReset,
     };
@@ -64,12 +61,12 @@ private:
     struct {
         uint8_t pin; /* Analog input */
     } xAxis, yAxis;
-    uint8_t directionState;
+    DirectionState directionState;
 };
 
 class DisplayController {
 public:
-    enum class State {
+    enum class State : uint8_t {
         Disengaged = 0,
         Engaged,
     };
@@ -175,7 +172,7 @@ uint8_t JoystickController::getDirectionValue()
     const unsigned yVal = analogRead(yAxis.pin);
 
     switch (directionState) {
-    case Ok: {
+    case DirectionState::Ok: {
         const uint8_t xDir = xVal < AXIS_MIN_THRESHOLD
             ? JoystickDirection::Left
             : (xVal > AXIS_MAX_THRESHOLD ? JoystickDirection::Right : JoystickDirection::None);
@@ -197,12 +194,10 @@ uint8_t JoystickController::getDirectionValue()
 
         return xDir + yDir;
     }
-    case NeedsReset:
-        directionState = !(
-            xVal == Tiny::clamp(xVal, RESET_RANGE) && yVal == Tiny::clamp(yVal, RESET_RANGE));
+    case DirectionState::NeedsReset:
+        if (xVal == Tiny::clamp(xVal, RESET_RANGE) && yVal == Tiny::clamp(yVal, RESET_RANGE))
+            directionState = DirectionState::Ok;
         return JoystickDirection::None;
-    default:
-        UNREACHABLE;
     }
 }
 
