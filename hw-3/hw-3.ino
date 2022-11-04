@@ -105,13 +105,15 @@ static constexpr uint8_t SEGMENT_PINS[NumSegments] = {
 };
 
 static constexpr SegmentNeighbours SEGMENTS_NEIGHBOURS[NumSegments] = {
-    [Segment::A] = { Segment::A, Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::B] = { Segment::B, Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::C] = { Segment::C, Segment::G, Segment::D, Segment::E, Segment::Dot },
-    [Segment::D] = { Segment::D, Segment::G, Segment::D, Segment::E, Segment::C },
-    [Segment::E] = { Segment::E, Segment::G, Segment::D, Segment::E, Segment::C },
-    [Segment::F] = { Segment::F, Segment::A, Segment::G, Segment::F, Segment::B },
-    [Segment::G] = { Segment::G, Segment::A, Segment::D, Segment::G, Segment::G },
+/*  Source segment                       Neighbour through move type                       */
+/*                     None          Up            Down          Left        Right         */
+    [Segment::A]   = { Segment::A,   Segment::A,   Segment::G,   Segment::F, Segment::B   },
+    [Segment::B]   = { Segment::B,   Segment::A,   Segment::G,   Segment::F, Segment::B   },
+    [Segment::C]   = { Segment::C,   Segment::G,   Segment::D,   Segment::E, Segment::Dot },
+    [Segment::D]   = { Segment::D,   Segment::G,   Segment::D,   Segment::E, Segment::C   },
+    [Segment::E]   = { Segment::E,   Segment::G,   Segment::D,   Segment::E, Segment::C   },
+    [Segment::F]   = { Segment::F,   Segment::A,   Segment::G,   Segment::F, Segment::B   },
+    [Segment::G]   = { Segment::G,   Segment::A,   Segment::D,   Segment::G, Segment::G   },
     [Segment::Dot] = { Segment::Dot, Segment::Dot, Segment::Dot, Segment::C, Segment::Dot },
 };
 
