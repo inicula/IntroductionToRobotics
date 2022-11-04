@@ -29,4 +29,13 @@ template <typename T> const T& clamp(const T& x, const T& low, const T& high)
         return high;
     return x;
 }
+
+template <typename T> const T& clamp(const T& x, const Pair<T, T>& range)
+{
+    if (x < range.first)
+        return range.first;
+    if (x > range.second)
+        return range.second;
+    return x;
+}
 }
