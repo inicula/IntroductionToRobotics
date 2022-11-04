@@ -2,6 +2,8 @@
 #include <Arduino.h>
 #include <limits.h>
 
+#define UNREACHABLE __builtin_unreachable()
+
 /* Enums */
 enum Segment : uint8_t {
     A = 0,
@@ -198,6 +200,8 @@ uint8_t JoystickController::getDirectionValue()
         if (xVal == Tiny::clamp(xVal, RESET_RANGE) && yVal == Tiny::clamp(yVal, RESET_RANGE))
             directionState = DirectionState::Ok;
         return JoystickDirection::None;
+    default:
+        UNREACHABLE;
     }
 }
 
@@ -221,7 +225,7 @@ void DisplayController::update(const unsigned long now, JoystickController& joys
             currentSegment = Segment::Dot;
         }
 
-        /* Find the current segment's appropriate blink phase */
+        /* Calculate the current segment's appropriate blink phase */
         const bool oddInterval = (now / SELECTED_BLINK_INTERVAL) % 2;
 
         /* Odd interval -> treat segment as ON. Even interval -> treat segment as OFF */
@@ -240,6 +244,8 @@ void DisplayController::update(const unsigned long now, JoystickController& joys
 
         drawSegments(segmentStates);
         break;
+    default:
+        UNREACHABLE;
     }
 }
 
