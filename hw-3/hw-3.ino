@@ -14,6 +14,17 @@ enum Segment : uint8_t {
     NumSegments,
 };
 
+enum JoystickDirection : uint8_t {
+    Up = 0,
+    Down,
+    Left,
+    Right,
+    NumDirections,
+};
+
+/* Using declarations */
+using SegmentNeighbours = uint8_t[JoystickDirection::NumDirections];
+
 /* Classes and member functions */
 class ButtonController {
 public:
@@ -29,7 +40,7 @@ public:
     uint8_t getState(const unsigned long);
 
     static constexpr unsigned long SHORT_PRESS_DUR = 100;
-    static constexpr unsigned long LONG_PRESS_DURATION = 1000;
+    static constexpr unsigned long LONG_PRESS_DURATION = 2000;
 
 private:
     bool update(const unsigned long);
@@ -76,28 +87,64 @@ uint8_t ButtonController::getState(const unsigned long currentTs)
     return PressType::Short + (pressDur > LONG_PRESS_DURATION);
 }
 
-/* Constants */
+/* Compile-time constants */
 static constexpr uint8_t BUTTON_PIN = 2;
 
-static constexpr uint8_t SEGMENT_OUTPUT_PINS[NumSegments] = {
-    [Segment::A] = 2,
-    [Segment::B] = 3,
-    [Segment::C] = 4,
-    [Segment::D] = 5,
-    [Segment::E] = 6,
-    [Segment::F] = 7,
-    [Segment::G] = 8,
-    [Segment::Dot] = 9,
+static constexpr uint8_t SEGMENT_PINS[NumSegments] = {
+    [Segment::A] = 4,
+    [Segment::B] = 5,
+    [Segment::C] = 6,
+    [Segment::D] = 7,
+    [Segment::E] = 8,
+    [Segment::F] = 9,
+    [Segment::G] = 10,
+    [Segment::Dot] = 11,
+};
+
+static constexpr SegmentNeighbours SEGMENTS_NEIGHBOURS[NumSegments] = {
+    [Segment::A] = { Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::B] = { Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::C] = { Segment::G, Segment::D, Segment::E, Segment::Dot },
+    [Segment::D] = { Segment::G, Segment::D, Segment::E, Segment::C },
+    [Segment::E] = { Segment::G, Segment::D, Segment::E, Segment::C },
+    [Segment::F] = { Segment::A, Segment::G, Segment::F, Segment::B },
+    [Segment::G] = { Segment::A, Segment::D, Segment::G, Segment::G },
+    [Segment::Dot] = { Segment::Dot, Segment::Dot, Segment::C, Segment::Dot },
+};
+
+static constexpr uint16_t DIGIT_SEGMENT_STATES[10] = {
+    [0] = 0b00111111,
+    [1] = 0b00000110,
+    [2] = 0b01011011,
+    [3] = 0b01001111,
+    [4] = 0b01100110,
+    [5] = 0b01101101,
+    [6] = 0b01111101,
+    [7] = 0b00000111,
+    [8] = 0b01111111,
+    [9] = 0b01101111,
 };
 
 /* Global variables */
 static ButtonController buttonController(BUTTON_PIN);
 
 /* Functions */
+void showDigit(const uint16_t segmentStates)
+{
+    static constexpr uint16_t MASK = 1;
+    for (uint16_t i = 0; i < NumSegments; ++i) {
+        const uint16_t value = segmentStates & (MASK << i);
+        digitalWrite(SEGMENT_PINS[i], bool(value));
+    }
+}
+
 void setup()
 {
+    /* Init serial output */
+    Serial.begin(9600);
+
     /* Init segment display */
-    for (auto pin : SEGMENT_OUTPUT_PINS)
+    for (auto pin : SEGMENT_PINS)
         pinMode(pin, OUTPUT);
 
     /* Init button controller */
@@ -106,8 +153,12 @@ void setup()
 
 void loop()
 {
-    const auto pressType = buttonController.getState(millis());
-    const auto pressed = bool(pressType);
+    static uint8_t digit = 0;
+
+    showDigit(DIGIT_SEGMENT_STATES[digit]);
+    delay(500);
+    ++digit;
+    digit %= 10;
 }
 
 int main()
