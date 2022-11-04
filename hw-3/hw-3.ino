@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <limits.h>
 
+/* Macros */
 #define UNREACHABLE __builtin_unreachable()
 
 /* Enums */
