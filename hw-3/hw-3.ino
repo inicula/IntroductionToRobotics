@@ -31,7 +31,7 @@ enum JoystickDirection : uint8_t {
 using SegmentNeighbours = Segment[JoystickDirection::NumDirections];
 using Bitfield = uint16_t;
 
-/* Classes and member functions */
+/* Classes */
 class JoystickController {
 public:
     enum PressType : uint8_t {
