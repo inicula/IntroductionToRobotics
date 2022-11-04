@@ -252,10 +252,9 @@ void DisplayController::update(const unsigned long now, JoystickController& joys
 
 void DisplayController::drawSegments(const Bitfield segmentStates)
 {
-    static constexpr Bitfield MASK = 1;
-    for (unsigned i = 0; i < NumSegments; ++i) {
-        const bool segValue = segmentStates & (MASK << i);
-        digitalWrite(SEGMENT_PINS[i], segValue);
+    for (size_t i = 0; i < NumSegments; ++i) {
+        const Bitfield mask = 1 << i;
+        digitalWrite(SEGMENT_PINS[i], bool(segmentStates & mask));
     }
 }
 
