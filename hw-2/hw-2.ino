@@ -12,12 +12,12 @@ enum Led {
 };
 
 enum CrossState {
-    PedRedLight = 0,     /* Red for pedestrians. Green for cars. Ends on button press      */
-    PedRedLightEnding,   /* Same as above but ends after 8 seconds.                        */
-    CarYellowLight,      /* Red for pedestrians. Yellow for cars. Ends after 3 seconds.    */
-    PedGreenLight,       /* Green for pedestrians. Frequent buzz. Ends after 8 seconds.    */
-    PedGreenLightEnding, /* Blinking green light. Faster buzz rate. Ends after 4 seconds.  */
-    NumCrossStates,      /* When a state `S` ends, state `(S + 1) % NumCrossStates` begins */
+    PedRedLight = 0,     /* Red for pedestrians. Green for cars. Ends on button press.      */
+    PedRedLightEnding,   /* Same as above but ends after 8 seconds.                         */
+    CarYellowLight,      /* Red for pedestrians. Yellow for cars. Ends after 3 seconds.     */
+    PedGreenLight,       /* Green for pedestrians. Frequent buzz. Ends after 8 seconds.     */
+    PedGreenLightEnding, /* Blinking green light. Faster buzz rate. Ends after 4 seconds.   */
+    NumCrossStates,      /* When a state `S` ends, state `(S + 1) % NumCrossStates` begins. */
 };
 
 /* Constants */
@@ -67,9 +67,9 @@ static bool buttonIsPressed() { return digitalRead(BUTTON_PIN) == LOW; }
 
 static void updateLeds(const uint8_t ledStates)
 {
-    static constexpr uint8_t mask = 1;
+    static constexpr uint8_t MASK = 1;
     for (uint8_t i = 0; i < NumLeds; ++i) {
-        const uint8_t value = ledStates & (mask << i);
+        const uint8_t value = ledStates & (MASK << i);
         digitalWrite(LED_OUTPUT_PINS[i], bool(value));
     }
 }
