@@ -7,7 +7,7 @@ public:
         Disengaged = 0,
         Engaged,
     };
-    enum Segment : u8 {
+    enum Node : u8 {
         A = 0,
         B,
         C,
@@ -16,44 +16,44 @@ public:
         F,
         G,
         DP,
-        NumSegments,
+        NumNodes,
     };
 
-    using SegNeighbours = Segment[JoystickController::NUM_DIRECTIONS];
+    using NodeNeighbours = Node[JoystickController::NUM_DIRECTIONS];
     using Bitfield16 = uint16_t;
 
     DisplayController() = default;
     void update(u32, JoystickController&);
     void init() const;
 
-    static constexpr SegNeighbours SEGMENTS_NEIGHBOURS[NumSegments] = {
-     /* Source segment                       Neighbour through move type                     */
-     /*                    None          Up            Down          Left        Right       */
-        [Segment::A]   = { Segment::A,   Segment::A,   Segment::G,   Segment::F, Segment::B  },
-        [Segment::B]   = { Segment::B,   Segment::A,   Segment::G,   Segment::F, Segment::B  },
-        [Segment::C]   = { Segment::C,   Segment::G,   Segment::D,   Segment::E, Segment::DP },
-        [Segment::D]   = { Segment::D,   Segment::G,   Segment::D,   Segment::E, Segment::C  },
-        [Segment::E]   = { Segment::E,   Segment::G,   Segment::D,   Segment::E, Segment::C  },
-        [Segment::F]   = { Segment::F,   Segment::A,   Segment::G,   Segment::F, Segment::B  },
-        [Segment::G]   = { Segment::G,   Segment::A,   Segment::D,   Segment::G, Segment::G  },
-        [Segment::DP]  = { Segment::DP,  Segment::DP,  Segment::DP,  Segment::C, Segment::DP },
+    static constexpr NodeNeighbours NODE_NEIGHBOURS[NumNodes] = {
+   /*   Source node             Neighbour through move type            */
+   /*                  None      Up        Down      Left     Right    */
+        [Node::A]  = { Node::A,  Node::A,  Node::G,  Node::F, Node::B  },
+        [Node::B]  = { Node::B,  Node::A,  Node::G,  Node::F, Node::B  },
+        [Node::C]  = { Node::C,  Node::G,  Node::D,  Node::E, Node::DP },
+        [Node::D]  = { Node::D,  Node::G,  Node::D,  Node::E, Node::C  },
+        [Node::E]  = { Node::E,  Node::G,  Node::D,  Node::E, Node::C  },
+        [Node::F]  = { Node::F,  Node::A,  Node::G,  Node::F, Node::B  },
+        [Node::G]  = { Node::G,  Node::A,  Node::D,  Node::G, Node::G  },
+        [Node::DP] = { Node::DP, Node::DP, Node::DP, Node::C, Node::DP },
     };
-    static constexpr u8 SEGMENT_PINS[NumSegments] = {
-        [Segment::A] = 4,
-        [Segment::B] = 5,
-        [Segment::C] = 6,
-        [Segment::D] = 7,
-        [Segment::E] = 8,
-        [Segment::F] = 9,
-        [Segment::G] = 10,
-        [Segment::DP] = 11,
+    static constexpr u8 NODE_PINS[NumNodes] = {
+        [Node::A] = 4,
+        [Node::B] = 5,
+        [Node::C] = 6,
+        [Node::D] = 7,
+        [Node::E] = 8,
+        [Node::F] = 9,
+        [Node::G] = 10,
+        [Node::DP] = 11,
     };
 
 private:
-    static void drawSegments(Bitfield16);
+    static void drawNodes(Bitfield16);
 
 private:
-    Segment currentSegment;
+    Node currentNode;
     State currentState;
-    Bitfield16 segmentStates;
+    Bitfield16 nodeStates;
 };
