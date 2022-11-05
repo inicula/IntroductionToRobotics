@@ -6,6 +6,9 @@ constexpr u8 DisplayController::SEGMENT_PINS[NumSegments];
 
 void DisplayController::update(const u32 currentTs, JoystickController& joystickController)
 {
+    static constexpr u32 SELECTED_BLINK_INTERVAL = 350;
+    static constexpr Bitfield16 ALL_SEGMENTS_OFF = 0;
+
     const auto joystickDir = joystickController.getDirection();
     const auto joyPressType = joystickController.getButtonValue(currentTs);
     const bool joyPressed = joyPressType != JoystickController::Press::None;
@@ -48,16 +51,16 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
     }
 }
 
+void DisplayController::init() const
+{
+    for (auto pin : SEGMENT_PINS)
+        pinMode(pin, OUTPUT);
+}
+
 void DisplayController::drawSegments(const Bitfield16 segmentStates)
 {
     for (u32 i = 0; i < NumSegments; ++i) {
         const Bitfield16 mask = 1 << i;
         digitalWrite(SEGMENT_PINS[i], bool(segmentStates & mask));
     }
-}
-
-void DisplayController::init() const
-{
-    for (auto pin : SEGMENT_PINS)
-        pinMode(pin, OUTPUT);
 }

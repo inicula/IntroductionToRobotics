@@ -26,9 +26,6 @@ public:
     void update(u32, JoystickController&);
     void init() const;
 
-    /* Display configuration */
-    static constexpr u32 SELECTED_BLINK_INTERVAL = 350;
-    static constexpr Bitfield16 ALL_SEGMENTS_OFF = 0;
     static constexpr SegNeighbours SEGMENTS_NEIGHBOURS[NumSegments] = {
      /* Source segment                       Neighbour through move type                     */
      /*                    None          Up            Down          Left        Right       */
