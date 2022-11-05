@@ -27,8 +27,6 @@ public:
     Direction getDirection();
 
     static constexpr auto NUM_DIRECTIONS = u8(Direction::NumDirections);
-    static constexpr u8 SIDE_MOVEMENT_MASK
-        = (1 << u8(Direction::Left)) | (1 << u8(Direction::Right));
 
 private:
     bool updateButton(u32);

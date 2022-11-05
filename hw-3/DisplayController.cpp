@@ -12,7 +12,7 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
     const auto joystickDir = joystickController.getDirection();
     const auto joyPress = joystickController.getButtonValue(currentTs);
 
-    const Bitset8 nodeMask = 1 << currentNode;
+    const auto nodeMask = Bitset8(1 << currentNode);
     switch (currentState) {
     case State::Disengaged: {
         /* Handle directional input */
@@ -30,14 +30,15 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
         const bool oddInterval = (currentTs / SELECTED_BLINK_INTERVAL) % 2;
 
         /* Odd interval -> treat node as ON. Even interval -> treat node as OFF */
-        const Bitset8 intervalNodeStates
-            = (nodeStates & ~nodeMask) | (oddInterval << currentNode);
+        const auto intervalNodeStates
+            = Bitset8((nodeStates & ~nodeMask) | (oddInterval << currentNode));
 
         drawNodes(intervalNodeStates);
         break;
     }
     case State::Engaged:
-        if (u8(joystickDir) & JoystickController::SIDE_MOVEMENT_MASK)
+        if (joystickDir == JoystickController::Direction::Left
+            || joystickDir == JoystickController::Direction::Right)
             nodeStates ^= nodeMask; /* Toggle the current node */
 
         if (joyPress != JoystickController::Press::None)
@@ -59,7 +60,7 @@ void DisplayController::init() const
 void DisplayController::drawNodes(const Bitset8 nodeStates)
 {
     for (u32 i = 0; i < NumNodes; ++i) {
-        const Bitset8 mask = 1 << i;
+        const auto mask = Bitset8(1 << i);
         digitalWrite(NODE_PINS[i], bool(nodeStates & mask));
     }
 }
