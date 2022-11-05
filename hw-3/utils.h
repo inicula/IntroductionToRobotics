@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include <stdint.h>
 
 namespace Tiny {
 /* <utility> */
@@ -39,3 +40,8 @@ template <typename T> const T& clamp(const T& x, const Pair<T, T>& range)
     return x;
 }
 }
+
+#define UNREACHABLE __builtin_unreachable()
+
+using u8 = uint8_t;
+using u32 = uint32_t;

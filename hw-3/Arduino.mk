@@ -1064,7 +1064,7 @@ else
 endif
 
 CFLAGS        += $(CFLAGS_STD)
-CXXFLAGS      += -fpermissive -fno-exceptions $(CXXFLAGS_STD)
+CXXFLAGS      += -fno-exceptions $(CXXFLAGS_STD)
 ASFLAGS       += -x assembler-with-cpp
 ifeq ($(shell expr $(CC_VERNUM) '>' 490), 1)
     ASFLAGS += -flto
