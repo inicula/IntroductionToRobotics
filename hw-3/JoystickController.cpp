@@ -15,20 +15,6 @@ void JoystickController::init()
     button.previousTs = millis();
 }
 
-bool JoystickController::updateButton(const u32 currentTs)
-{
-    const bool currentValue = digitalRead(button.pin);
-    if (currentValue != button.previousValue) {
-        button.previousValue = currentValue;
-        button.pressDur = currentTs - button.previousTs;
-        button.previousTs = currentTs;
-
-        return true;
-    }
-
-    return false;
-}
-
 JoystickController::Press JoystickController::getButtonValue(const u32 currentTs)
 {
     /* Button thresholds */
@@ -86,4 +72,18 @@ JoystickController::Direction JoystickController::getDirection()
     default:
         UNREACHABLE;
     }
+}
+
+bool JoystickController::updateButton(const u32 currentTs)
+{
+    const bool currentValue = digitalRead(button.pin);
+    if (currentValue != button.previousValue) {
+        button.previousValue = currentValue;
+        button.pressDur = currentTs - button.previousTs;
+        button.previousTs = currentTs;
+
+        return true;
+    }
+
+    return false;
 }
