@@ -18,7 +18,7 @@ void JoystickController::init()
 JoystickController::Press JoystickController::getButtonValue(const u32 currentTs)
 {
     /* Button thresholds */
-    static constexpr u32 SHORT_PRESS_DUR = 100;
+    static constexpr u32 SHORT_PRESS_DUR = 50;
     static constexpr u32 LONG_PRESS_DURATION = 2000;
 
     const bool changed = updateButton(currentTs);
