@@ -1,5 +1,4 @@
 #include "DisplayController.h"
-#include <Arduino.h>
 
 constexpr DisplayController::NodeNeighbours DisplayController::NODE_NEIGHBOURS[NumNodes];
 constexpr u8 DisplayController::NODE_PINS[NumNodes];

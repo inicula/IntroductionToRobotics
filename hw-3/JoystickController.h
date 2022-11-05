@@ -1,5 +1,6 @@
 #pragma once
 #include "utils.h"
+#include <Arduino.h>
 
 class JoystickController {
 public:
