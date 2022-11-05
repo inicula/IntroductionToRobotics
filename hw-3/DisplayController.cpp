@@ -6,7 +6,7 @@ constexpr u8 DisplayController::NODE_PINS[NumNodes];
 
 void DisplayController::update(const u32 currentTs, JoystickController& joystickController)
 {
-    static constexpr u32 SELECTED_BLINK_INTERVAL = 350;
+    static constexpr u32 SELECTED_BLINK_INTERVAL = 300;
     static constexpr Bitfield16 ALL_SEGMENTS_OFF_MASK = 1 << Node::DP;
 
     const auto joystickDir = joystickController.getDirection();
@@ -38,7 +38,8 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
         break;
     }
     case State::Engaged:
-        if (joystickDir == JoystickController::Direction::Left)
+        if (joystickDir == JoystickController::Direction::Left
+            || joystickDir == JoystickController::Direction::Right)
             nodeStates ^= nodeMask; /* Toggle the current node */
 
         if (joyPressed)
