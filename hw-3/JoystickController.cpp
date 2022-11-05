@@ -1,5 +1,4 @@
 #include "JoystickController.h"
-#include <Arduino.h>
 
 JoystickController::JoystickController(const u8 buttonPin, const u8 xPin, const u8 yPin)
 {

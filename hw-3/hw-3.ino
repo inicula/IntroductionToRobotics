@@ -1,7 +1,4 @@
 #include "DisplayController.h"
-#include "utils.h"
-#include <Arduino.h>
-#include <limits.h>
 
 /* Compile-time constants */
 static constexpr u8 BUTTON_PIN = 2;
