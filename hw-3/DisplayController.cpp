@@ -6,7 +6,7 @@ constexpr u8 DisplayController::NODE_PINS[NumNodes];
 void DisplayController::update(const u32 currentTs, JoystickController& joystickController)
 {
     static constexpr u32 SELECTED_BLINK_INTERVAL = 300;
-    static constexpr Bitset8 ALL_SEGMENTS_OFF_MASK = 1 << Node::DP;
+    static constexpr Bitset8 ALL_NODES_OFF = 0;
 
     const auto joystickDir = joystickController.getDirection();
     const auto joyPress = joystickController.getButtonValue(currentTs);
@@ -21,7 +21,7 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
         if (joyPress == JoystickController::Press::Short)
             currentState = State::Engaged;
         else if (joyPress == JoystickController::Press::Long) {
-            nodeStates &= ALL_SEGMENTS_OFF_MASK;
+            nodeStates = ALL_NODES_OFF;
             currentNode = Node::DP;
         }
 
