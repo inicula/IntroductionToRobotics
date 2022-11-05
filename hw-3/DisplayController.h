@@ -20,7 +20,7 @@ public:
     };
 
     using NodeNeighbours = Node[JoystickController::NUM_DIRECTIONS];
-    using Bitset16 = uint16_t;
+    using Bitset8 = u8;
 
     DisplayController() = default;
     void update(u32, JoystickController&);
@@ -50,10 +50,10 @@ public:
     };
 
 private:
-    static void drawNodes(Bitset16);
+    static void drawNodes(Bitset8);
 
 private:
     Node currentNode;
     State currentState;
-    Bitset16 nodeStates;
+    Bitset8 nodeStates;
 };

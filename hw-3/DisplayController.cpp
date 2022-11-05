@@ -7,22 +7,21 @@ constexpr u8 DisplayController::NODE_PINS[NumNodes];
 void DisplayController::update(const u32 currentTs, JoystickController& joystickController)
 {
     static constexpr u32 SELECTED_BLINK_INTERVAL = 300;
-    static constexpr Bitset16 ALL_SEGMENTS_OFF_MASK = 1 << Node::DP;
+    static constexpr Bitset8 ALL_SEGMENTS_OFF_MASK = 1 << Node::DP;
 
     const auto joystickDir = joystickController.getDirection();
-    const auto joyPressType = joystickController.getButtonValue(currentTs);
-    const bool joyPressed = joyPressType != JoystickController::Press::None;
+    const auto joyPress = joystickController.getButtonValue(currentTs);
 
-    const Bitset16 nodeMask = 1 << currentNode;
+    const Bitset8 nodeMask = 1 << currentNode;
     switch (currentState) {
     case State::Disengaged: {
         /* Handle directional input */
         currentNode = NODE_NEIGHBOURS[currentNode][u8(joystickDir)];
 
         /* Handle button input */
-        if (joyPressType == JoystickController::Press::Short)
+        if (joyPress == JoystickController::Press::Short)
             currentState = State::Engaged;
-        else if (joyPressType == JoystickController::Press::Long) {
+        else if (joyPress == JoystickController::Press::Long) {
             nodeStates &= ALL_SEGMENTS_OFF_MASK;
             currentNode = Node::DP;
         }
@@ -31,18 +30,17 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
         const bool oddInterval = (currentTs / SELECTED_BLINK_INTERVAL) % 2;
 
         /* Odd interval -> treat node as ON. Even interval -> treat node as OFF */
-        const Bitset16 intervalNodeStates
+        const Bitset8 intervalNodeStates
             = (nodeStates & ~nodeMask) | (oddInterval << currentNode);
 
         drawNodes(intervalNodeStates);
         break;
     }
     case State::Engaged:
-        if (joystickDir == JoystickController::Direction::Left
-            || joystickDir == JoystickController::Direction::Right)
+        if (u8(joystickDir) & JoystickController::SIDE_MOVEMENT_MASK)
             nodeStates ^= nodeMask; /* Toggle the current node */
 
-        if (joyPressed)
+        if (joyPress != JoystickController::Press::None)
             currentState = State::Disengaged;
 
         drawNodes(nodeStates);
@@ -58,10 +56,10 @@ void DisplayController::init() const
         pinMode(pin, OUTPUT);
 }
 
-void DisplayController::drawNodes(const Bitset16 nodeStates)
+void DisplayController::drawNodes(const Bitset8 nodeStates)
 {
     for (u32 i = 0; i < NumNodes; ++i) {
-        const Bitset16 mask = 1 << i;
+        const Bitset8 mask = 1 << i;
         digitalWrite(NODE_PINS[i], bool(nodeStates & mask));
     }
 }
