@@ -1229,11 +1229,11 @@ $(OBJDIR)/%.c.o: %.c $(COMMON_DEPS) | $(OBJDIR)
 
 $(OBJDIR)/%.cc.o: %.cc $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
-	$(CXX) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+	$(CXX) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $(CXXLOCALFLAGS) $< -o $@
 
 $(OBJDIR)/%.cpp.o: %.cpp $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
-	$(CXX) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+	$(CXX) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $(CXXLOCALFLAGS) $< -o $@
 
 $(OBJDIR)/%.S.o: %.S $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
@@ -1251,7 +1251,7 @@ $(OBJDIR)/%.pde.o: %.pde $(COMMON_DEPS) | $(OBJDIR)
 # the ino -> o file
 $(OBJDIR)/%.ino.o: %.ino $(COMMON_DEPS) | $(OBJDIR)
 	@$(MKDIR) $(dir $@)
-	$(CXX) -x c++ -include $(ARDUINO_HEADER) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $< -o $@
+	$(CXX) -x c++ -include $(ARDUINO_HEADER) -MMD -c $(CPPFLAGS) $(CXXFLAGS) $(CXXLOCALFLAGS) $< -o $@
 
 # generated assembly
 $(OBJDIR)/%.s: %.pde $(COMMON_DEPS) | $(OBJDIR)
