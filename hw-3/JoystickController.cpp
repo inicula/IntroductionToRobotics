@@ -34,7 +34,7 @@ JoystickController::Direction JoystickController::getDirection()
     static constexpr u16 AXIS_DELTA_THRESHOLD = 400;
     static constexpr u16 AXIS_MIN_THRESHOLD = INPUT_MIDDLE - AXIS_DELTA_THRESHOLD;
     static constexpr u16 AXIS_MAX_THRESHOLD = INPUT_MIDDLE + AXIS_DELTA_THRESHOLD;
-    static constexpr u16 RESET_THRESHOLD = 30;
+    static constexpr u16 RESET_THRESHOLD = 60;
     static constexpr Tiny::Pair<u16, u16> RESET_RANGE
         = { INPUT_MIDDLE - RESET_THRESHOLD, INPUT_MIDDLE + RESET_THRESHOLD };
 
@@ -51,18 +51,14 @@ JoystickController::Direction JoystickController::getDirection()
             ? Direction::Down
             : (yVal > AXIS_MAX_THRESHOLD ? Direction::Up : Direction::None);
 
-        if (u8(xDir) || u8(yDir))
-            moveState = MoveState::NeedsReset;
+        moveState = MoveState::NeedsReset;
+        if (u8(xDir) && yVal == Tiny::clamp(yVal, RESET_RANGE))
+            return xDir;
+        if (u8(yDir) && xVal == Tiny::clamp(xVal, RESET_RANGE))
+            return yDir;
 
-        if (u8(xDir) && u8(yDir)) {
-            /* Both values are past the threshold, so choose the one closer to the limits */
-            const auto xRemaining = min(xVal - INPUT_RANGE.first, INPUT_RANGE.second - xVal);
-            const auto yRemaining = min(yVal - INPUT_RANGE.first, INPUT_RANGE.second - yVal);
-
-            return xRemaining <= yRemaining ? xDir : yDir;
-        }
-
-        return Direction(u8(xDir) | u8(yDir));
+        moveState = MoveState::Ok;
+        return Direction::None;
     }
     case MoveState::NeedsReset:
         if (xVal == Tiny::clamp(xVal, RESET_RANGE) && yVal == Tiny::clamp(yVal, RESET_RANGE))
