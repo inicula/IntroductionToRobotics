@@ -5,7 +5,7 @@ constexpr u8 DisplayController::NODE_PINS[NumNodes];
 
 void DisplayController::update(const u32 currentTs, JoystickController& joystickController)
 {
-    static constexpr u32 SELECTED_BLINK_INTERVAL = 300;
+    static constexpr u32 SELECTED_BLINK_INTERVAL = 256;
     static constexpr Bitset8 ALL_NODES_OFF = 0;
 
     const auto joystickDir = joystickController.getDirection();
