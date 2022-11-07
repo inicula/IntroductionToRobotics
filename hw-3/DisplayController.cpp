@@ -3,6 +3,14 @@
 constexpr DisplayController::NodeNeighbours DisplayController::NODE_NEIGHBOURS[NumNodes];
 constexpr u8 DisplayController::NODE_PINS[NumNodes];
 
+void DisplayController::init()
+{
+    for (auto pin : NODE_PINS)
+        pinMode(pin, OUTPUT);
+
+    currentNode = Node::DP;
+}
+
 void DisplayController::update(const u32 currentTs, JoystickController& joystickController)
 {
     static constexpr u32 SELECTED_BLINK_INTERVAL = 256;
@@ -48,14 +56,6 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
     default:
         UNREACHABLE;
     }
-}
-
-void DisplayController::init()
-{
-    for (auto pin : NODE_PINS)
-        pinMode(pin, OUTPUT);
-
-    currentNode = Node::DP;
 }
 
 void DisplayController::drawNodes(const Bitset8 nodeStates)

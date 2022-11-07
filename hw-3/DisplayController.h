@@ -22,9 +22,8 @@ public:
     using NodeNeighbours = Node[JoystickController::NUM_DIRECTIONS];
     using Bitset8 = u8;
 
-    DisplayController() = default;
-    void update(u32, JoystickController&);
     void init();
+    void update(u32, JoystickController&);
 
     static constexpr NodeNeighbours NODE_NEIGHBOURS[NumNodes] = {
    /*   Source node             Neighbour through move type            */
