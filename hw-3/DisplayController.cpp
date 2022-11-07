@@ -50,10 +50,12 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
     }
 }
 
-void DisplayController::init() const
+void DisplayController::init()
 {
     for (auto pin : NODE_PINS)
         pinMode(pin, OUTPUT);
+
+    currentNode = Node::DP;
 }
 
 void DisplayController::drawNodes(const Bitset8 nodeStates)

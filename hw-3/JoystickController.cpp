@@ -38,8 +38,8 @@ JoystickController::Direction JoystickController::getDirection()
     static constexpr Tiny::Pair<u16, u16> RESET_RANGE
         = { INPUT_MIDDLE - RESET_THRESHOLD, INPUT_MIDDLE + RESET_THRESHOLD };
 
-    const u16 xVal = analogRead(xAxis.pin);
-    const u16 yVal = analogRead(yAxis.pin);
+    const auto xVal = u16(analogRead(xAxis.pin));
+    const auto yVal = u16(analogRead(yAxis.pin));
 
     switch (moveState) {
     case MoveState::Ok: {

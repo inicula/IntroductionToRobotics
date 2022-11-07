@@ -24,7 +24,7 @@ public:
 
     DisplayController() = default;
     void update(u32, JoystickController&);
-    void init() const;
+    void init();
 
     static constexpr NodeNeighbours NODE_NEIGHBOURS[NumNodes] = {
    /*   Source node             Neighbour through move type            */
