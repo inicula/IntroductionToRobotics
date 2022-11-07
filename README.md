@@ -16,4 +16,4 @@ Tasks:
 
 ## [Homework #2](hw-2)
 
-## [Homework #2](hw-3)
+## [Homework #3](hw-3)
