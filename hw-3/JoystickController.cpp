@@ -51,6 +51,14 @@ JoystickController::Direction JoystickController::getDirection()
     const auto xVal = u16(analogRead(xAxis.pin));
     const auto yVal = u16(analogRead(yAxis.pin));
 
+    /*
+     *  Only return a direction if an axis is past the minimum/maximum threshold and the other
+     *  axis is in the non-conflict range. This avoids processing a direction for both axes at
+     *  the same time.
+     *
+     *  The `MoveState::NeedsReset` begins after a move and ends when both axes
+     *  are in the `RESET_RANGE`.
+     */
     switch (moveState) {
     case MoveState::Ok: {
         const auto xDir = xVal < AXIS_MIN_THRESHOLD
