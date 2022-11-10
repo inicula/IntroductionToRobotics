@@ -29,14 +29,24 @@ JoystickController::Press JoystickController::getButtonValue(const u32 currentTs
 JoystickController::Direction JoystickController::getDirection()
 {
     /* Axis thresholds */
-    static constexpr Tiny::Pair<u16, u16> INPUT_RANGE = { 0, 1023 };
+    static constexpr Tiny::Pair<u16, u16> INPUT_RANGE = {
+        0,
+        1023,
+    };
     static constexpr u16 INPUT_MIDDLE = INPUT_RANGE.second / 2;
     static constexpr u16 AXIS_DELTA_THRESHOLD = 400;
+    static constexpr u16 RESET_DELTA_THRESHOLD = 80;
+    static constexpr u16 NON_CONFLICT_DELTA_THRESHOLD = 200;
     static constexpr u16 AXIS_MIN_THRESHOLD = INPUT_MIDDLE - AXIS_DELTA_THRESHOLD;
     static constexpr u16 AXIS_MAX_THRESHOLD = INPUT_MIDDLE + AXIS_DELTA_THRESHOLD;
-    static constexpr u16 RESET_THRESHOLD = 60;
-    static constexpr Tiny::Pair<u16, u16> RESET_RANGE
-        = { INPUT_MIDDLE - RESET_THRESHOLD, INPUT_MIDDLE + RESET_THRESHOLD };
+    static constexpr Tiny::Pair<u16, u16> RESET_RANGE = {
+        INPUT_MIDDLE - RESET_DELTA_THRESHOLD,
+        INPUT_MIDDLE + RESET_DELTA_THRESHOLD,
+    };
+    static constexpr Tiny::Pair<u16, u16> NON_CONFLICT_RANGE = {
+        INPUT_MIDDLE - NON_CONFLICT_DELTA_THRESHOLD,
+        INPUT_MIDDLE + NON_CONFLICT_DELTA_THRESHOLD,
+    };
 
     const auto xVal = u16(analogRead(xAxis.pin));
     const auto yVal = u16(analogRead(yAxis.pin));
@@ -52,9 +62,9 @@ JoystickController::Direction JoystickController::getDirection()
             : (yVal > AXIS_MAX_THRESHOLD ? Direction::Up : Direction::None);
 
         moveState = MoveState::NeedsReset;
-        if (u8(xDir) && yVal == Tiny::clamp(yVal, RESET_RANGE))
+        if (u8(xDir) && yVal == Tiny::clamp(yVal, NON_CONFLICT_RANGE))
             return xDir;
-        if (u8(yDir) && xVal == Tiny::clamp(xVal, RESET_RANGE))
+        if (u8(yDir) && xVal == Tiny::clamp(xVal, NON_CONFLICT_RANGE))
             return yDir;
 
         moveState = MoveState::Ok;
