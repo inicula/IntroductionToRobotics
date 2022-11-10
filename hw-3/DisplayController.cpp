@@ -61,7 +61,7 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
 void DisplayController::drawNodes(const Bitset8 nodeStates)
 {
     for (u32 i = 0; i < NumNodes; ++i) {
-        const auto mask = Bitset8(1 << i);
-        digitalWrite(NODE_PINS[i], bool(nodeStates & mask));
+        const auto nodeValue = u8((nodeStates >> i) & 1);
+        digitalWrite(NODE_PINS[i], nodeValue);
     }
 }
