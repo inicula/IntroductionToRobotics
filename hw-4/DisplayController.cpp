@@ -49,12 +49,12 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
     }
     case State::Engaged: {
         /* Handle directional input */
-        const i8 delta = joystickDir == JoystickController::Direction::Right
+        const i8 delta = joystickDir == JoystickController::Direction::Up
             ? 1
-            : (joystickDir == JoystickController::Direction::Left ? -1 : 0);
+            : (joystickDir == JoystickController::Direction::Down ? -1 : 0);
 
         sectionDigits[currentSection] = u8(sectionDigits[currentSection] + delta);
-        currentSection %= NumSections;
+        sectionDigits[currentSection] %= NUM_DIGITS;
 
         if (joyPress != JoystickController::Press::None)
             currentState = State::Disengaged;
