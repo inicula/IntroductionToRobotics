@@ -41,13 +41,13 @@ public:
         [Section::D3] = 5,
         [Section::D4] = 4,
     };
-    static constexpr u8 SECTION_STATES[NumSections] = {
+    static constexpr Bitset8 SECTION_STATES[NumSections] = {
         [Section::D1] = 0b0001,
         [Section::D2] = 0b0010,
         [Section::D3] = 0b0100,
         [Section::D4] = 0b1000,
     };
-    static constexpr u8 DIGIT_NODE_STATES[NUM_DIGITS] = {
+    static constexpr Bitset8 DIGIT_NODE_STATES[NUM_DIGITS] = {
         [0x0] = 0b00111111,
         [0x1] = 0b00000110,
         [0x2] = 0b01011011,
@@ -67,7 +67,7 @@ public:
     };
 
 private:
-    static void drawDigit(u8, u8);
+    void drawDigit(Bitset8);
 
 private:
     Tiny::Array<u8, NumSections> sectionDigits;

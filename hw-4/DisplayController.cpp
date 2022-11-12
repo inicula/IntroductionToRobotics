@@ -26,8 +26,7 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
             ? 1
             : (joystickDir == JoystickController::Direction::Left ? -1 : 0);
 
-        currentSection = u8(currentSection + delta);
-        currentSection %= NumSections;
+        currentSection = u8(currentSection + delta) % NumSections;
 
         /* Handle button input */
         if (joyPress == JoystickController::Press::Short)
@@ -44,7 +43,7 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
         const auto intervalNodeStates = Bitset8(
             DIGIT_NODE_STATES[sectionDigits[currentSection]] | (oddInterval << Node::DP));
 
-        drawDigit(currentSection, intervalNodeStates);
+        drawDigit(intervalNodeStates);
         break;
     }
     case State::Engaged: {
@@ -53,16 +52,16 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
             ? 1
             : (joystickDir == JoystickController::Direction::Down ? -1 : 0);
 
-        sectionDigits[currentSection] = u8(sectionDigits[currentSection] + delta);
-        sectionDigits[currentSection] %= NUM_DIGITS;
+        sectionDigits[currentSection] = u8(sectionDigits[currentSection] + delta) % NUM_DIGITS;
 
+        /* Handle button input */
         if (joyPress != JoystickController::Press::None)
             currentState = State::Disengaged;
 
         const auto nodeStates
             = Bitset8(DIGIT_NODE_STATES[sectionDigits[currentSection]] | (1 << Node::DP));
 
-        drawDigit(currentSection, nodeStates);
+        drawDigit(nodeStates);
         break;
     }
     default:
@@ -70,16 +69,18 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
     }
 }
 
-void DisplayController::drawDigit(const u8 section, const Bitset8 nodeStates)
+void DisplayController::drawDigit(const Bitset8 nodeStates)
 {
-    const Bitset8 sectionStates = SECTION_STATES[section];
+    for (u8 sectionIter = 0; sectionIter < NumSections; ++sectionIter) {
+        for (u8 i = 0; i < NumSections; ++i) {
+            const auto sectionValue = u8((~SECTION_STATES[sectionIter] >> i) & 1);
+            digitalWrite(SECTION_PINS[i], sectionValue);
+        }
 
-    for (u32 i = 0; i < NumSections; ++i) {
-        const auto sectionValue = u8((sectionStates >> i) & 1);
-        digitalWrite(SECTION_PINS[i], sectionValue);
+        digitalWrite(LATCH_PIN, LOW);
+        shiftOut(DATA_PIN, CLOCK_PIN, LSBFIRST,
+            sectionIter == currentSection ? nodeStates
+                                          : DIGIT_NODE_STATES[sectionDigits[sectionIter]]);
+        digitalWrite(LATCH_PIN, HIGH);
     }
-
-    digitalWrite(LATCH_PIN, LOW);
-    shiftOut(DATA_PIN, CLOCK_PIN, LSBFIRST, nodeStates);
-    digitalWrite(LATCH_PIN, HIGH);
 }
