@@ -1,9 +1,9 @@
-# Homework #3
+# Homework #4
 
 ## Task Description
 
-Control the segment states of a sevent-segment display using a joystick.
+Control the digits on a 4-digit 7-segment display.
 
-## [Setup picture](https://drive.google.com/file/d/1xrX2-uabKPxh7DxhuouDo_4IAYvMxW65/view?usp=share_link)
+## [Setup picture](https://0x0.st)
 
-## [Demo (video)](https://drive.google.com/file/d/11QiOdKdo3DlxIeFzmwQGaRhmPHE6xVyN/view?usp=share_link)
+## [Demo (video)](https://0x0.st)
