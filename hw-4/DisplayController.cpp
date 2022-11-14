@@ -8,6 +8,10 @@ using i8 = int8_t;
 
 void DisplayController::init()
 {
+    pinMode(DATA_PIN, OUTPUT);
+    pinMode(LATCH_PIN, OUTPUT);
+    pinMode(CLOCK_PIN, OUTPUT);
+
     for (auto pin : SECTION_PINS)
         pinMode(pin, OUTPUT);
 }
