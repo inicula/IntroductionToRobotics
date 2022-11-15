@@ -32,7 +32,7 @@ public:
     static constexpr auto NUM_DIRECTIONS = u8(Direction::NumDirections);
 
 private:
-    bool updateButton(u32);
+    bool updateButton(u32 currentTs);
 
 private:
     struct {
