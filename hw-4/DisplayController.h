@@ -29,7 +29,7 @@ public:
     using Bitset8 = u8;
 
     void init();
-    void update(u32, JoystickController&);
+    void update(u32 currentTs, JoystickController& joystickController);
 
     static constexpr u8 DATA_PIN = 12;
     static constexpr u8 LATCH_PIN = 11;
@@ -72,7 +72,7 @@ public:
     };
 
 private:
-    void drawDigit(Bitset8);
+    void drawDigit(Bitset8 nodeStates);
 
 private:
     Tiny::Array<u8, NumSections> sectionDigits;

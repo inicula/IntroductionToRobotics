@@ -23,7 +23,7 @@ public:
     };
 
     void init();
-    Press getButtonValue(u32);
+    Press getButtonValue(u32 currentTs);
     Direction getDirection();
 
     static constexpr u8 BUTTON_PIN = 2;
