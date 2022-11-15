@@ -1,15 +1,8 @@
 #include "JoystickController.h"
 
-JoystickController::JoystickController(const u8 buttonPin, const u8 xPin, const u8 yPin)
-{
-    button.pin = buttonPin;
-    xAxis.pin = xPin;
-    yAxis.pin = yPin;
-}
-
 void JoystickController::init()
 {
-    pinMode(button.pin, INPUT_PULLUP);
+    pinMode(BUTTON_PIN, INPUT_PULLUP);
     button.previousValue = HIGH;
     button.previousTs = millis();
 }
@@ -48,8 +41,8 @@ JoystickController::Direction JoystickController::getDirection()
         INPUT_MIDDLE + NON_CONFLICT_DELTA_THRESHOLD,
     };
 
-    const auto xVal = u16(analogRead(xAxis.pin));
-    const auto yVal = u16(analogRead(yAxis.pin));
+    const auto xVal = u16(analogRead(X_AXIS_PIN));
+    const auto yVal = u16(analogRead(Y_AXIS_PIN));
 
     /*
      *  Only return a direction if an axis is past the minimum/maximum threshold and the other
@@ -89,7 +82,7 @@ JoystickController::Direction JoystickController::getDirection()
 
 bool JoystickController::updateButton(const u32 currentTs)
 {
-    const bool currentValue = digitalRead(button.pin);
+    const bool currentValue = digitalRead(BUTTON_PIN);
     if (currentValue != button.previousValue) {
         button.previousValue = currentValue;
         button.pressDur = currentTs - button.previousTs;

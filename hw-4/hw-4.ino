@@ -1,10 +1,7 @@
 #include "DisplayController.h"
 
-/* Compile-time constants */
-static constexpr u8 BUTTON_PIN = 2;
-
 /* Global variables */
-static JoystickController joystickController(BUTTON_PIN, A1, A0);
+static JoystickController joystickController;
 static DisplayController displayController;
 
 /* Functions */

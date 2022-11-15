@@ -22,11 +22,13 @@ public:
         NeedsReset,
     };
 
-    JoystickController(u8, u8, u8);
     void init();
     Press getButtonValue(u32);
     Direction getDirection();
 
+    static constexpr u8 BUTTON_PIN = 2;
+    static constexpr u8 X_AXIS_PIN = A0;
+    static constexpr u8 Y_AXIS_PIN = A1;
     static constexpr auto NUM_DIRECTIONS = u8(Direction::NumDirections);
 
 private:
@@ -34,13 +36,9 @@ private:
 
 private:
     struct {
-        u8 pin;
         bool previousValue;
         u32 previousTs;
         u32 pressDur;
     } button;
-    struct {
-        u8 pin; /* Analog input */
-    } xAxis, yAxis;
     MoveState moveState;
 };
