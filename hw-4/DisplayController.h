@@ -42,12 +42,17 @@ public:
         [Section::D4] = 4,
     };
     static constexpr Bitset8 SECTION_STATES[NumSections] = {
+        /*
+         *  Section states (from right to left). when a certain section is being activated.
+         *  Same order as in `enum Section`.
+         */
         [Section::D1] = 0b0001,
         [Section::D2] = 0b0010,
         [Section::D3] = 0b0100,
         [Section::D4] = 0b1000,
     };
     static constexpr Bitset8 DIGIT_NODE_STATES[NUM_DIGITS] = {
+        /* Node states (from right to left). Order is the same as in `enum Node`. */
         [0x0] = 0b00111111,
         [0x1] = 0b00000110,
         [0x2] = 0b01011011,
