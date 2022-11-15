@@ -75,6 +75,8 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
 
 void DisplayController::drawDigit(const Bitset8 nodeStates)
 {
+    static constexpr u8 MULTIPLEXING_DELAY_DUR = 5;
+
     for (u8 sectionIter = 0; sectionIter < NumSections; ++sectionIter) {
         for (u8 i = 0; i < NumSections; ++i) {
             const auto sectionValue = u8((~SECTION_STATES[sectionIter] >> i) & 1);
@@ -86,5 +88,7 @@ void DisplayController::drawDigit(const Bitset8 nodeStates)
             sectionIter == currentSection ? nodeStates
                                           : DIGIT_NODE_STATES[sectionDigits[sectionIter]]);
         digitalWrite(LATCH_PIN, HIGH);
+
+        delay(MULTIPLEXING_DELAY_DUR);
     }
 }
