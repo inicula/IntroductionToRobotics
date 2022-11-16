@@ -22,6 +22,7 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
     const auto joystickDir = joystickController.getDirection();
     const auto joyPress = joystickController.getButtonValue(currentTs);
 
+    Bitset8 nodeStates;
     switch (currentState) {
     case State::Disengaged: {
         /* Handle directional input */
@@ -43,10 +44,9 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
         const bool oddInterval = (currentTs / SELECTED_BLINK_INTERVAL) % 2;
 
         /* Odd interval -> treat DP as ON. Even interval -> treat DP as OFF */
-        const auto intervalNodeStates = Bitset8(
+        nodeStates = Bitset8(
             DIGIT_NODE_STATES[sectionDigits[currentSection]] | (oddInterval << Node::DP));
 
-        drawDigit(intervalNodeStates);
         break;
     }
     case State::Engaged: {
@@ -61,15 +61,16 @@ void DisplayController::update(const u32 currentTs, JoystickController& joystick
         if (joyPress != JoystickController::Press::None)
             currentState = State::Disengaged;
 
-        const auto nodeStates
+        nodeStates
             = Bitset8(DIGIT_NODE_STATES[sectionDigits[currentSection]] | (1 << Node::DP));
 
-        drawDigit(nodeStates);
         break;
     }
     default:
         UNREACHABLE;
     }
+
+    drawDigit(nodeStates);
 }
 
 void DisplayController::drawDigit(const Bitset8 nodeStates)
