@@ -1,9 +1,9 @@
 #include "DisplayController.h"
 
+using i8 = int8_t;
+
 constexpr u8 DisplayController::SECTION_PINS[NumSections];
 constexpr u8 DisplayController::DIGIT_NODE_STATES[NUM_DIGITS];
-
-using i8 = int8_t;
 
 void DisplayController::init()
 {
