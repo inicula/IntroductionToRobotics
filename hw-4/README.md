@@ -2,7 +2,7 @@
 
 ## Task Description
 
-Control the digits on a 4-digit 7-segment display.
+Control the digits on a 4-digit 7-segment display using a joystick.
 
 ## [Setup picture](https://drive.google.com/file/d/1HtqSX-6TUgaskubSyktDfGnS7yXzDdiC/view?usp=share_link)
 
