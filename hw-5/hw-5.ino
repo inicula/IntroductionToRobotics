@@ -6,7 +6,11 @@
 
 static JoystickController joystickController;
 
-void setup() { displayController.init(); }
+void setup()
+{
+    joystickController.init();
+    displayController.init();
+}
 
 void loop()
 {
