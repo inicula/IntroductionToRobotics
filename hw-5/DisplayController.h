@@ -30,6 +30,7 @@ public:
         i8 pos;
     };
     struct SettingSliderParams {
+        const char* description;
         i32* value;
         i32 min, max;
         void (*callback)(void*);

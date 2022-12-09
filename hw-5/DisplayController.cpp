@@ -232,9 +232,11 @@ void settingsUpdate(u32, JoystickController::Press, JoystickController::Directio
     };
     static constexpr State SETTING_TRANSITION_STATES[NumPositions] = {
         [Contrast] = { &sliderUpdate, 0, true,
-            { .slider = { &displayController.contrast, 0, 255, &refreshContrast } } },
+            { .slider
+                = { "Contrast", &displayController.contrast, 0, 255, &refreshContrast } } },
         [Brightness] = { &sliderUpdate, 0, true,
-            { .slider = { &displayController.brightness, 0, 255, &refreshBrightness } } },
+            { .slider = { "Brightness", &displayController.brightness, 0, 255,
+                  &refreshBrightness } } },
     };
 
     auto& lcd = displayController.lcd;
@@ -305,6 +307,8 @@ void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction 
         state.entry = false;
 
         lcd.clear();
+        lcd.print(params.description);
+        lcd.setCursor(0, 1);
         lcd.print(*params.value);
         lcd.print("   ");
     }
@@ -317,7 +321,7 @@ void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction 
     if (*params.value != newValue) {
         *params.value = newValue;
 
-        lcd.setCursor(0, 0);
+        lcd.setCursor(0, 1);
         lcd.print(*params.value);
         lcd.print("   ");
 
