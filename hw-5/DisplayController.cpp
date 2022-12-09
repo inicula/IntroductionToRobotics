@@ -61,6 +61,7 @@ void greetUpdate(u32 currentTs, JoystickController::Press, JoystickController::D
 
     if (state.entry) {
         state.entry = false;
+
         lcd.clear();
         lcd.print("HAVE FUN!");
     }
@@ -289,10 +290,8 @@ void aboutUpdate(u32 currentTs, JoystickController::Press, JoystickController::D
         lcd.print("Nicula Ionut 334");
     }
 
-    if (currentTs - state.timestamp > ABOUT_DURATION) {
-        lcd.clear();
+    if (currentTs - state.timestamp > ABOUT_DURATION)
         state = { &mainMenuUpdate, 0, true, { .mainMenu = { 0 } } };
-    }
 }
 
 template <int DIFF>
@@ -326,7 +325,6 @@ void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction 
     }
 
     if (joyDir == JoystickController::Direction::Left) {
-        lcd.clear();
         state = { &settingsUpdate, 0, true, {} };
     }
 }
