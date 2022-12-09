@@ -2,7 +2,15 @@
 
 using State = DisplayController::State;
 
+constexpr u8 DisplayController::DEFAULT_CONTRAST;
+constexpr u8 DisplayController::DEFAULT_BRIGHTNESS;
+
 DisplayController displayController;
+
+static constexpr Tiny::Pair<void*, u16> SETTINGS_FROM_STORAGE[] = {
+    { &displayController.contrast, sizeof(displayController.contrast) },
+    { &displayController.brightness, sizeof(displayController.brightness) },
+};
 
 static void refreshContrast(void*);
 static void refreshBrightness(void*);
@@ -14,6 +22,25 @@ static void settingsUpdate(u32, JoystickController::Press, JoystickController::D
 static void aboutUpdate(u32, JoystickController::Press, JoystickController::Direction);
 template <int DIFF = 10>
 static void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction);
+
+static void eepromRead(void* addr, size_t eepromBaseAddr, size_t count)
+{
+    u8 buffer[count];
+
+    for (size_t i = 0; i < count; ++i)
+        buffer[i] = EEPROM.read(i16(eepromBaseAddr + i));
+
+    memcpy(addr, &buffer[0], count);
+}
+
+static void eepromWrite(void* addr, size_t eepromBaseAddr, size_t count)
+{
+    u8 buffer[count];
+    memcpy(&buffer[0], addr, count);
+
+    for (size_t i = 0; i < count; ++i)
+        EEPROM.update(i16(eepromBaseAddr + i), buffer[i]);
+}
 
 void refreshContrast(void* data)
 {
@@ -220,6 +247,12 @@ void settingsUpdate(u32, JoystickController::Press, JoystickController::Directio
         lcd.print("Settings");
         lcd.setCursor(0, 1);
         lcd.print(SETTINGS_DESCRIPTORS[params.pos]);
+
+        size_t eepromAddr = 0;
+        for (auto pair : SETTINGS_FROM_STORAGE) {
+            eepromWrite(pair.first, eepromAddr, pair.second);
+            eepromAddr += pair.second;
+        }
     }
 
     const i8 delta = joyDir == JoystickController::Direction::Up
@@ -301,13 +334,17 @@ void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction 
 DisplayController::DisplayController()
     : lcd(RS_PIN, ENABLE_PIN, D4, D5, D6, D7)
     , lc(DIN_PIN, CLOCK_PIN, LOAD_PIN, 1)
-    , contrast(DEFAULT_CONTRAST)
-    , brightness(DEFAULT_BRIGHTNESS)
 {
 }
 
 void DisplayController::init()
 {
+    size_t eepromAddr = 0;
+    for (auto pair : SETTINGS_FROM_STORAGE) {
+        eepromRead(pair.first, eepromAddr, pair.second);
+        eepromAddr += pair.second;
+    }
+
     lc.shutdown(0, false);
     lc.setIntensity(0, DEFAULT_MATRIX_BRIGHTNESS);
     lc.clearDisplay(0);
@@ -315,8 +352,8 @@ void DisplayController::init()
     lcd.begin(NUM_COLS, NUM_ROWS);
     pinMode(CONTRAST_PIN, OUTPUT);
     pinMode(BRIGHTNESS_PIN, OUTPUT);
-    analogWrite(CONTRAST_PIN, DEFAULT_CONTRAST);
-    analogWrite(BRIGHTNESS_PIN, DEFAULT_BRIGHTNESS);
+    analogWrite(CONTRAST_PIN, i16(contrast));
+    analogWrite(BRIGHTNESS_PIN, i16(brightness));
 
     state = { greetUpdate, millis(), true, {} };
 }
