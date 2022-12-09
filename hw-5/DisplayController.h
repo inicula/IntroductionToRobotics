@@ -14,6 +14,10 @@ public:
     struct Position {
         bool operator==(const Position& rhs) const { return x == rhs.x && y == rhs.y; }
         bool operator!=(const Position& rhs) const { return !(*this == rhs); }
+        Position clamp(const i8 low, const i8 high) const
+        {
+            return { Tiny::clamp(x, low, high), Tiny::clamp(y, low, high) };
+        }
 
         i8 x, y;
     };

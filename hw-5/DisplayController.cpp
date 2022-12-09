@@ -230,8 +230,7 @@ void startGameUpdate(
         lc.setLed(0, params.food.y, params.food.x, true);
     }
 
-    if (params.player.x < 0 || params.player.x >= DisplayController::MATRIX_SIZE
-        || params.player.y < 0 || params.player.y >= DisplayController::MATRIX_SIZE) {
+    if(params.player != params.player.clamp(0, DisplayController::MATRIX_SIZE - 1)) {
         lc.clearDisplay(0);
 
         const auto score = params.score;
