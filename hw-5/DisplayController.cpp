@@ -12,8 +12,8 @@ static constexpr Tiny::Pair<void*, u16> SETTINGS_FROM_STORAGE[] = {
     { &displayController.brightness, sizeof(displayController.brightness) },
 };
 
-static void refreshContrast(void*);
-static void refreshBrightness(void*);
+static void refreshContrast(const void*);
+static void refreshBrightness(const void*);
 static void greetUpdate(u32, JoystickController::Press, JoystickController::Direction);
 static void gameOverUpdate(u32, JoystickController::Press, JoystickController::Direction);
 static void mainMenuUpdate(u32, JoystickController::Press, JoystickController::Direction);
@@ -33,7 +33,7 @@ static void eepromRead(void* addr, size_t eepromBaseAddr, size_t count)
     memcpy(addr, &buffer[0], count);
 }
 
-static void eepromWrite(void* addr, size_t eepromBaseAddr, size_t count)
+static void eepromWrite(const void* addr, size_t eepromBaseAddr, size_t count)
 {
     u8 buffer[count];
     memcpy(&buffer[0], addr, count);
@@ -42,14 +42,14 @@ static void eepromWrite(void* addr, size_t eepromBaseAddr, size_t count)
         EEPROM.update(i16(eepromBaseAddr + i), buffer[i]);
 }
 
-void refreshContrast(void* data)
+void refreshContrast(const void* data)
 {
-    analogWrite(DisplayController::CONTRAST_PIN, int(*(i32*)(data)));
+    analogWrite(DisplayController::CONTRAST_PIN, int(*(const i32*)(data)));
 }
 
-void refreshBrightness(void* data)
+void refreshBrightness(const void* data)
 {
-    analogWrite(DisplayController::BRIGHTNESS_PIN, int(*(i32*)(data)));
+    analogWrite(DisplayController::BRIGHTNESS_PIN, int(*(const i32*)(data)));
 }
 
 void greetUpdate(u32 currentTs, JoystickController::Press, JoystickController::Direction)
