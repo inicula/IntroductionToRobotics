@@ -7,11 +7,6 @@ constexpr u8 DisplayController::DEFAULT_BRIGHTNESS;
 
 DisplayController displayController;
 
-static constexpr Tiny::Pair<void*, u16> SETTINGS_FROM_STORAGE[] = {
-    { &displayController.contrast, sizeof(displayController.contrast) },
-    { &displayController.brightness, sizeof(displayController.brightness) },
-};
-
 static void refreshContrast(const void*);
 static void refreshBrightness(const void*);
 static void greetUpdate(u32, JoystickController::Press, JoystickController::Direction);
@@ -22,6 +17,13 @@ static void settingsUpdate(u32, JoystickController::Press, JoystickController::D
 static void aboutUpdate(u32, JoystickController::Press, JoystickController::Direction);
 template <i32 DIFF = 10>
 static void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction);
+
+static constexpr Tiny::Pair<void*, u16> SETTINGS_FROM_STORAGE[] = {
+    { &displayController.contrast, sizeof(displayController.contrast) },
+    { &displayController.brightness, sizeof(displayController.brightness) },
+};
+static constexpr State DEFAULT_MENU_STATE
+    = { &mainMenuUpdate, 0, true, { .mainMenu = { 0 } } };
 
 static void eepromRead(void* addr, size_t eepromBaseAddr, size_t count)
 {
@@ -67,7 +69,7 @@ void greetUpdate(u32 currentTs, JoystickController::Press, JoystickController::D
     }
 
     if (currentTs - state.timestamp > GREET_DURATION)
-        state = { &mainMenuUpdate, 0, true, { .mainMenu = { 0 } } };
+        state = DEFAULT_MENU_STATE;
 }
 
 void gameOverUpdate(u32 currentTs, JoystickController::Press, JoystickController::Direction)
@@ -89,7 +91,7 @@ void gameOverUpdate(u32 currentTs, JoystickController::Press, JoystickController
     }
 
     if (currentTs - state.timestamp > DURATION)
-        state = { &mainMenuUpdate, 0, true, { .mainMenu = { 0 } } };
+        state = DEFAULT_MENU_STATE;
 }
 
 void mainMenuUpdate(
@@ -316,7 +318,7 @@ void settingsUpdate(u32, JoystickController::Press, JoystickController::Directio
     if (joyDir == JoystickController::Direction::Right)
         state = SETTING_TRANSITION_STATES[params.pos];
     if (joyDir == JoystickController::Direction::Left)
-        state = { &mainMenuUpdate, 0, true, { .mainMenu = { 0 } } };
+        state = DEFAULT_MENU_STATE;
 }
 
 void aboutUpdate(u32 currentTs, JoystickController::Press, JoystickController::Direction)
@@ -336,7 +338,7 @@ void aboutUpdate(u32 currentTs, JoystickController::Press, JoystickController::D
     }
 
     if (currentTs - state.timestamp > ABOUT_DURATION)
-        state = { &mainMenuUpdate, 0, true, { .mainMenu = { 0 } } };
+        state = DEFAULT_MENU_STATE;
 }
 
 template <i32 DIFF>
@@ -371,9 +373,8 @@ void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction 
         params.callback(params.value);
     }
 
-    if (joyDir == JoystickController::Direction::Left) {
+    if (joyDir == JoystickController::Direction::Left)
         state = { &settingsUpdate, 0, true, {} };
-    }
 }
 
 DisplayController::DisplayController()
