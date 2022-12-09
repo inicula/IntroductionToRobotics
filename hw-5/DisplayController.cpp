@@ -103,8 +103,8 @@ void mainMenuUpdate(
 
     static constexpr const char* MENU_DESCRIPTORS[NumPositions] = {
         [StartGame] = ">Start Game     ",
-        [Settings] = ">Settings       ",
-        [About] = ">About          ",
+        [Settings]  = ">Settings       ",
+        [About]     = ">About          ",
     };
     static constexpr State MENU_TRANSITION_STATES[NumPositions] = {
         [StartGame] = { &startGameUpdate, 0, true, { .game = { { 0, 0 }, { 0, 0 }, 255 } } },
@@ -226,7 +226,7 @@ void settingsUpdate(u32, JoystickController::Press, JoystickController::Directio
     };
 
     static constexpr const char* SETTINGS_DESCRIPTORS[NumPositions] = {
-        [Contrast] = ">Contrast       ",
+        [Contrast]   = ">Contrast       ",
         [Brightness] = ">Brightness     ",
     };
     static constexpr State SETTING_TRANSITION_STATES[NumPositions] = {
