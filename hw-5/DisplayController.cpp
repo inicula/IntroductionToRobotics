@@ -108,9 +108,30 @@ void mainMenuUpdate(
         [About]     = ">About          ",
     };
     static constexpr State MENU_TRANSITION_STATES[NumPositions] = {
-        [StartGame] = { &startGameUpdate, 0, true, { .game = { { 0, 0 }, { 0, 0 }, 255 } } },
-        [Settings] = { &settingsUpdate, 0, true, {} },
-        [About] = { &aboutUpdate, 0, true, {} },
+        [StartGame] = {
+            &startGameUpdate,
+            0,
+            true,
+            {
+                .game = {
+                    { 0, 0 },
+                    { 0, 0 },
+                    255
+                }
+            }
+        },
+        [Settings] = {
+            &settingsUpdate,
+            0,
+            true,
+            {}
+        },
+        [About] = {
+            &aboutUpdate,
+            0,
+            true,
+            {}
+        },
     };
 
     auto& lcd = displayController.lcd;
@@ -231,12 +252,34 @@ void settingsUpdate(u32, JoystickController::Press, JoystickController::Directio
         [Brightness] = ">Brightness     ",
     };
     static constexpr State SETTING_TRANSITION_STATES[NumPositions] = {
-        [Contrast] = { &sliderUpdate, 0, true,
-            { .slider
-                = { "Contrast", &displayController.contrast, 0, 255, &refreshContrast } } },
-        [Brightness] = { &sliderUpdate, 0, true,
-            { .slider = { "Brightness", &displayController.brightness, 0, 255,
-                  &refreshBrightness } } },
+        [Contrast] = {
+            &sliderUpdate,
+            0,
+            true,
+            {
+                .slider = {
+                    "Contrast",
+                    &displayController.contrast,
+                    0,
+                    255,
+                    &refreshContrast
+                }
+            }
+        },
+        [Brightness] = {
+            &sliderUpdate,
+            0,
+            true,
+            {
+                .slider = {
+                    "Brightness",
+                    &displayController.brightness,
+                    0,
+                    255,
+                    &refreshBrightness
+                }
+            }
+        },
     };
 
     auto& lcd = displayController.lcd;
