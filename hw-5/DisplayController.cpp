@@ -56,7 +56,7 @@ void refreshBrightness(const void* data)
 
 void greetUpdate(u32 currentTs, JoystickController::Press, JoystickController::Direction)
 {
-    static constexpr u32 GREET_DURATION = 5000;
+    static constexpr u32 DURATION = 5000;
 
     auto& lcd = displayController.lcd;
     auto& state = displayController.state;
@@ -68,7 +68,7 @@ void greetUpdate(u32 currentTs, JoystickController::Press, JoystickController::D
         lcd.print("HAVE FUN!");
     }
 
-    if (currentTs - state.timestamp > GREET_DURATION)
+    if (currentTs - state.timestamp > DURATION)
         state = DEFAULT_MENU_STATE;
 }
 
@@ -323,7 +323,7 @@ void settingsUpdate(u32, JoystickController::Press, JoystickController::Directio
 
 void aboutUpdate(u32 currentTs, JoystickController::Press, JoystickController::Direction)
 {
-    static constexpr u32 ABOUT_DURATION = 3000;
+    static constexpr u32 DURATION = 3000;
 
     auto& lcd = displayController.lcd;
     auto& state = displayController.state;
@@ -337,7 +337,7 @@ void aboutUpdate(u32 currentTs, JoystickController::Press, JoystickController::D
         lcd.print("Nicula Ionut 334");
     }
 
-    if (currentTs - state.timestamp > ABOUT_DURATION)
+    if (currentTs - state.timestamp > DURATION)
         state = DEFAULT_MENU_STATE;
 }
 
