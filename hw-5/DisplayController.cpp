@@ -20,7 +20,7 @@ static void mainMenuUpdate(u32, JoystickController::Press, JoystickController::D
 static void startGameUpdate(u32, JoystickController::Press, JoystickController::Direction);
 static void settingsUpdate(u32, JoystickController::Press, JoystickController::Direction);
 static void aboutUpdate(u32, JoystickController::Press, JoystickController::Direction);
-template <int DIFF = 10>
+template <i32 DIFF = 10>
 static void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction);
 
 static void eepromRead(void* addr, size_t eepromBaseAddr, size_t count)
@@ -154,6 +154,8 @@ void startGameUpdate(
 
     if (state.entry) {
         state.entry = false;
+
+        randomSeed(micros());
 
         lcd.clear();
         lcd.print("PLAYING");
@@ -296,7 +298,7 @@ void aboutUpdate(u32 currentTs, JoystickController::Press, JoystickController::D
         state = { &mainMenuUpdate, 0, true, { .mainMenu = { 0 } } };
 }
 
-template <int DIFF>
+template <i32 DIFF>
 void sliderUpdate(u32, JoystickController::Press, JoystickController::Direction joyDir)
 {
     auto& lcd = displayController.lcd;
