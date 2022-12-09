@@ -207,13 +207,8 @@ void startGameUpdate(
         lc.setLed(0, params.food.y, params.food.x, true);
     }
 
-    bool dead = false;
-    if (params.player.x < 0 || params.player.x > 7)
-        dead = true;
-    if (params.player.y < 0 || params.player.y > 7)
-        dead = true;
-
-    if (dead) {
+    if (params.player.x < 0 || params.player.x >= DisplayController::MATRIX_SIZE
+        || params.player.y < 0 || params.player.y >= DisplayController::MATRIX_SIZE) {
         lc.clearDisplay(0);
 
         const auto score = params.score;
