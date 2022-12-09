@@ -199,7 +199,10 @@ void startGameUpdate(
         lcd.print("  ");
 
         while (params.food == params.player)
-            params.food = { i8(random(7)), i8(random(7)) };
+            params.food = {
+                i8(random(DisplayController::MATRIX_SIZE)),
+                i8(random(DisplayController::MATRIX_SIZE)),
+            };
 
         lc.setLed(0, params.food.y, params.food.x, true);
     }
